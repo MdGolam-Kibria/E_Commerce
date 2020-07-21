@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @ApiController
 @RequestMapping(UrlConstraint.AuthManagement.ROOT)
-public class AuthController {
+public class AuthController {//now add spring security
 
 }
