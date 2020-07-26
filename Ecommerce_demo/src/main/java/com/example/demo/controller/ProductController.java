@@ -41,7 +41,6 @@ public class ProductController {
         String requestedUserName = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsernameAndIsActiveTrue(requestedUserName);
         if (user != null) {
-//            User user = userRepository.findByUsernameAndIsActiveTrue(requestedUserName);
             if (user.getRoles().get(0).getName().equals("ROLE_ADMIN")) {
                 return productService.save(productDto);
             }
