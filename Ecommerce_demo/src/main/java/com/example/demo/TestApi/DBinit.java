@@ -45,7 +45,7 @@ public class DBinit {
         User user = userRepository.findByUsernameAndIsActiveTrue(username);
         if (user == null) {
             user = new User();
-            user.setEmail("abc@ab.com");
+            //user.setEmail("abc@ab.com");
             user.setUsername(username);
             user.setPassword(passwordEncoder.encode(password));
         }
