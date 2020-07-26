@@ -34,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt = getJwtFromRequest(httpServletRequest);
-            if (StringUtils.hasText(jwt) && jwtTokenProvider.isValidateToken(jwt)) {
+           if (StringUtils.hasText(jwt) && jwtTokenProvider.isValidateToken(jwt)) {
                 Long userId = jwtTokenProvider.getUserIdFromToken(jwt);
                 User user = userRepository.findByIdAndIsActiveTrue(userId);
                 UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getUsername());
@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);//
+            return bearerToken.substring(7);
         }
         return null;
     }

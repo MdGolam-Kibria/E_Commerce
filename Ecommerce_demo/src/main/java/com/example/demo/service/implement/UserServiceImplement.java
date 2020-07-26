@@ -16,9 +16,8 @@ public class UserServiceImplement implements UserService {
         this.userRepository = userRepository;
     }
 
-
     @Override
-    public User getUserByEmail(String username) {
+    public User getUserByUserName(String username) {
         return userRepository.findByUsernameAndIsActiveTrue(username);
     }
 }
