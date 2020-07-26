@@ -18,7 +18,7 @@ public class DBinit {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     @Value("${login.username}")
-    private String email;
+    private String username;
     @Value("${login.password}")
     private String password;
 
@@ -31,6 +31,7 @@ public class DBinit {
 
     @PostConstruct
     public void test() {
+
         String roleName = "ROLE_ADMIN";
         int roleExistCount = roleRepository.countByName(roleName);
         Role role = null;
@@ -41,11 +42,11 @@ public class DBinit {
             role.setName(roleName);
             role = roleRepository.save(role);
         }
-        User user = userRepository.findByEmailAndIsActiveTrue(email);
+        User user = userRepository.findByUsernameAndIsActiveTrue(username);
         if (user == null) {
             user = new User();
             user.setEmail("abc@ab.com");
-            user.setEmail(email);
+            user.setUsername(username);
             user.setPassword(passwordEncoder.encode(password));
         }
         user.setRoles(Arrays.asList(role));
