@@ -7,8 +7,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Data
-@Builder
 public class ProductDto {
+    private Long id;
     @NotEmpty(message = "Name is Mandatory")
     private String name;
     @NotEmpty(message = "Image is mandatory")

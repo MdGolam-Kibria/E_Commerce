@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,16 +34,51 @@ public class ProductController {
         this.checkUserRole = checkUserRole;
     }
 
-    @PostMapping(UrlConstraint.ProductManagement.CREATE)
     @ValidateData
+    @PostMapping(UrlConstraint.ProductManagement.CREATE)
     public Response createProduct(@Valid @RequestBody ProductDto productDto, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
         String requestedUserName = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsernameAndIsActiveTrue(requestedUserName);
         if (user != null) {
-            if (checkUserRole.getRoleType(user.getRoles()).equals("ROLE_ADMIN")){
+            if (checkUserRole.getRoleType(user.getRoles()).equals(UrlConstraint.ADMIN)) {
                 return productService.save(productDto);
             }
         }
         return ResponseBuilder.getFailureResponce(HttpStatus.BAD_REQUEST, "Sorry You do not have permission for this URL");
+    }
+
+    @ValidateData
+    @PutMapping(UrlConstraint.ProductManagement.UPDATE)
+    private Response update(@PathVariable("id") Long id, @Valid @RequestBody ProductDto productDto, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
+        String requestedUserName = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameAndIsActiveTrue(requestedUserName);
+        if (user != null) {
+            if (checkUserRole.getRoleType(user.getRoles()).equals(UrlConstraint.ADMIN)) {
+                return productService.update(id, productDto);
+            }
+        }
+        return ResponseBuilder.getFailureResponce(HttpStatus.BAD_REQUEST, "Sorry You do not have permission for this URL");
+    }
+
+    @GetMapping(UrlConstraint.ProductManagement.GET)
+    public Response get(@PathVariable("id") Long id) {
+        return productService.get(id);
+    }
+
+    @DeleteMapping(UrlConstraint.ProductManagement.DELETE)
+    public Response delete(@PathVariable("id") Long id) {
+        String requestedUserName = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameAndIsActiveTrue(requestedUserName);
+        if (user != null) {
+            if (checkUserRole.getRoleType(user.getRoles()).equals(UrlConstraint.ADMIN)) {
+                return productService.delete(id);
+            }
+        }
+        return ResponseBuilder.getFailureResponce(HttpStatus.BAD_REQUEST, "Sorry You do not have permission for this URL");
+    }
+
+    @GetMapping(UrlConstraint.ProductManagement.GET_ALL)
+    public Response getAll() {
+        return productService.getAll();
     }
 }

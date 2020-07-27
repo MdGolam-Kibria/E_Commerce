@@ -3,7 +3,8 @@ package com.example.demo.util;
 public class UrlConstraint {
     private UrlConstraint() {
     }
-
+    public static final String ADMIN = "ROLE_ADMIN";
+    public static final String USER = "ROLE_USER";
     private static final String VERSION = "/v1";
     private static final String API = "/api";
 

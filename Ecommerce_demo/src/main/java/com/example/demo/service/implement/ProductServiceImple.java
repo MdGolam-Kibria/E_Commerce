@@ -37,6 +37,56 @@ public class ProductServiceImple implements ProductService {
         return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
     }
 
+    @Override
+    public Response update(Long id, ProductDto productDto) {
+        Product product = productRepository.findByIdAndIsActiveTrue(id);
+        if (product != null) {
+            modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());//for ignore null value.
+            modelMapper.map(productDto, product);
+            product = productRepository.save(product);
+            if (product != null) {
+                return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + " Updated Successfully", null);
+            }
+            return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error occurs");
+        }
+        return ResponseBuilder.getFailureResponce(HttpStatus.NOT_FOUND, root + " Not Found");
+    }
+
+    @Override
+    public Response get(Long id) {
+        Product product = productRepository.findByIdAndIsActiveTrue(id);
+        if(product != null){
+            ProductDto productDto = modelMapper.map(product, ProductDto.class);
+            if(product != null){
+                return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root+" retrieved Successfully", productDto);
+            }else {
+                return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error Occurs");
+            }
+        }
+        return ResponseBuilder.getFailureResponce(HttpStatus.NOT_FOUND, root+" not found");
+    }
+
+    @Override
+    public Response delete(Long id) {
+        Product product = productRepository.findByIdAndIsActiveTrue(id);
+        if (product != null) {
+            product.setIsActive(false);
+            product = productRepository.save(product);
+            if (product != null) {
+                return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + " deleted Successfully", null);
+            }
+            return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error Occurs");
+        }
+        return ResponseBuilder.getFailureResponce(HttpStatus.NOT_FOUND, root + " not found");
+    }
+
+    @Override
+    public Response getAll() {
+        List<Product>products = productRepository.findAllByIsActiveTrue();
+        List<ProductDto> productDtos = this.getProducts(products);
+        return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + " retrieved Successfully",productDtos);
+    }
+
 
     private List<ProductDto> getProducts(List<Product> products) {
         List<ProductDto> productDtos = new ArrayList<>();
