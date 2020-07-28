@@ -10,8 +10,6 @@ import java.util.List;
 @Data
 @Entity
 public class User extends BaseModel {
-//    private String name;
-//    private String email;
     @NaturalId
     private String username;
     private String password;

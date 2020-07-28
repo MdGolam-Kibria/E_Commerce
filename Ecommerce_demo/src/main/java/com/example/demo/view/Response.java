@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Builder
 public class Response {
-    @JsonInclude(JsonInclude.Include.ALWAYS)//Responce failure or success jai hok na keno si data thakbe json e ;
+    @JsonInclude(JsonInclude.Include.ALWAYS)
     private long timestamp;
     @JsonInclude(JsonInclude.Include.ALWAYS)
     private int statusCode;
@@ -18,7 +18,7 @@ public class Response {
     private String status;
     @JsonInclude(JsonInclude.Include.ALWAYS)
     private String message;
-    @JsonInclude(JsonInclude.Include.NON_NULL)//jodi data ti NON_NULL na hoi tahole dekhabe.
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object content;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private int numberOfElement;

@@ -9,12 +9,12 @@ import java.util.Date;
 import java.util.List;
 
 public final class ResponseBuilder {
-    private ResponseBuilder() {//jeno kew new diya kono object make korte na pare;
+    private ResponseBuilder() {
     };
 
-    private static List<ErrorResponseDto> getCustomError(BindingResult result) {//for validation error.
+    private static List<ErrorResponseDto> getCustomError(BindingResult result) {
         List<ErrorResponseDto> dtoList = new ArrayList<>();
-        result.getFieldErrors().forEach(fieldError -> {//ami list of error gula ke for each loop er maddhome alada korechi.
+        result.getFieldErrors().forEach(fieldError -> {
             ErrorResponseDto dto = ErrorResponseDto.builder()
                     .field(fieldError.getField())
                     .message(fieldError.getDefaultMessage()).build();
@@ -23,36 +23,32 @@ public final class ResponseBuilder {
         return dtoList;
     }
 
-    public static Response getFailureResponce(BindingResult result, String message) {//for getFailure response
-
-        /*
-        ekhane builder ki setter er kaj korlo????????????????????
-         */
+    public static Response getFailureResponce(BindingResult result, String message) {
         return Response.builder()
                 .message(message)
-                .errors(getCustomError(result))//this paramiter my own making method i mean above getCustomError(BindingResult result); method
+                .errors(getCustomError(result))
                 .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .statusCode(HttpStatus.BAD_REQUEST.value())//like 404 error
-                .timestamp(new Date().getTime())//kokhon url hit hosse sei current time ta
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .timestamp(new Date().getTime())
                 .build();
     }
 
-    public static Response getFailureResponce(HttpStatus status, String message) {//for getFailure response
+    public static Response getFailureResponce(HttpStatus status, String message) {
         return Response.builder()
                 .message(message)
                 .status(status.getReasonPhrase())
-                .statusCode(status.value())//like 404 error
-                .timestamp(new Date().getTime())//kokhon url hit hosse sei current time ta
+                .statusCode(status.value())
+                .timestamp(new Date().getTime())
                 .build();
     }
 
-    public static Response getSuccessResponce(HttpStatus status, String message, Object content) {//for getSuccess response
+    public static Response getSuccessResponce(HttpStatus status, String message, Object content) {
         return Response.builder()
                 .message(message)
                 .status(status.getReasonPhrase())
                 .content(content)
-                .statusCode(status.value())//like 404 error
-                .timestamp(new Date().getTime())//kokhon url hit hosse sei current time ta
+                .statusCode(status.value())
+                .timestamp(new Date().getTime())
                 .build();
     }
 
@@ -62,8 +58,8 @@ public final class ResponseBuilder {
                 .status(status.getReasonPhrase())
                 .content(content)
                 .numberOfElement(numberOfElement)
-                .statusCode(status.value())//like 404 error
-                .timestamp(new Date().getTime())//kokhon url hit hosse sei current time ta
+                .statusCode(status.value())
+                .timestamp(new Date().getTime())
                 .build();
     }
 
@@ -73,9 +69,9 @@ public final class ResponseBuilder {
                 .status(status.getReasonPhrase())
                 .content(content)
                 .numberOfElement(numberOfElement)
-                .statusCode(status.value())//like 404 error
+                .statusCode(status.value())
                 .rowCount(rowCount)
-                .timestamp(new Date().getTime())//kokhon url hit hosse sei current time ta
+                .timestamp(new Date().getTime())
                 .build();
     }
 
