@@ -32,7 +32,8 @@ public class ValidateUserAspect {
     }
 
     @After(value = "execution(public * com.example.demo.controller.ProductController.*(..)) " +
-            "&& ! execution(public * com.example.demo.controller.ProductController.get())")
+            "&& ! execution(public * com.example.demo.controller.ProductController.getProduct(..))" +
+            "&& ! execution(public * com.example.demo.controller.ProductController.getAllProducts(..))")
     public void getMethodData(JoinPoint joinPoint) {
 
         Object[] signatures = joinPoint.getArgs();

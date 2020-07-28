@@ -49,7 +49,7 @@ public class ProductController {
 
     @ValidateData
     @PutMapping(UrlConstraint.ProductManagement.UPDATE)
-    private Response update(@PathVariable("id") Long id, @Valid @RequestBody ProductDto productDto, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
+    public Response updateProduct(@PathVariable("id") Long id, @Valid @RequestBody ProductDto productDto, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
         String requestedUserName = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsernameAndIsActiveTrue(requestedUserName);
         if (user != null) {
@@ -61,12 +61,12 @@ public class ProductController {
     }
 
     @GetMapping(UrlConstraint.ProductManagement.GET)
-    public Response get(@PathVariable("id") Long id) {
+    public Response getProduct(@PathVariable("id") Long id, HttpServletRequest request) {
         return productService.get(id);
     }
 
     @DeleteMapping(UrlConstraint.ProductManagement.DELETE)
-    public Response delete(@PathVariable("id") Long id) {
+    public Response deleteProduct(@PathVariable("id") Long id, HttpServletRequest request) {
         String requestedUserName = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsernameAndIsActiveTrue(requestedUserName);
         if (user != null) {
@@ -78,7 +78,7 @@ public class ProductController {
     }
 
     @GetMapping(UrlConstraint.ProductManagement.GET_ALL)
-    public Response getAll() {
+    public Response getAllProducts(HttpServletRequest request) {
         return productService.getAll();
     }
 }
