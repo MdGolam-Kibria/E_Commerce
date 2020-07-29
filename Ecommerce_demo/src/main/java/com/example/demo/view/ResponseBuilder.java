@@ -52,7 +52,7 @@ public final class ResponseBuilder {
                 .build();
     }
 
-    public static Response getSuccessResponce(HttpStatus status, String message, Object content, int numberOfElement) {//for getSuccess response
+    public static Response getSuccessResponce(HttpStatus status, String message, Object content, int numberOfElement) {
         return Response.builder()
                 .message(message)
                 .status(status.getReasonPhrase())
@@ -63,7 +63,7 @@ public final class ResponseBuilder {
                 .build();
     }
 
-    public static Response getSuccessResponce(HttpStatus status, String message, Object content, int numberOfElement, long rowCount) {//for getSuccess response
+    public static Response getSuccessResponce(HttpStatus status, String message, Object content, int numberOfElement, long rowCount) {
         return Response.builder()
                 .message(message)
                 .status(status.getReasonPhrase())

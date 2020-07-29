@@ -10,6 +10,7 @@ import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class ProductServiceImple implements ProductService {
     @Override
     public Response save(ProductDto productDto) {
         Product product = modelMapper.map(productDto, Product.class);
+        product.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         product = productRepository.save(product);
         if (product != null) {
             return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, root + " Created Successfully", null);
@@ -40,6 +42,7 @@ public class ProductServiceImple implements ProductService {
     @Override
     public Response update(Long id, ProductDto productDto) {
         Product product = productRepository.findByIdAndIsActiveTrue(id);
+        product.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         if (product != null) {
             modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());//for ignore null value.
             modelMapper.map(productDto, product);
@@ -71,6 +74,7 @@ public class ProductServiceImple implements ProductService {
         Product product = productRepository.findByIdAndIsActiveTrue(id);
         if (product != null) {
             product.setIsActive(false);
+            product.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
             product = productRepository.save(product);
             if (product != null) {
                 return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + " deleted Successfully", null);
