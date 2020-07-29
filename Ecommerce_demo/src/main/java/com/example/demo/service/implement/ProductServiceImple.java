@@ -88,7 +88,7 @@ public class ProductServiceImple implements ProductService {
     public Response getAll() {
         List<Product>products = productRepository.findAllByIsActiveTrue();
         List<ProductDto> productDtos = this.getProducts(products);
-        return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + " retrieved Successfully",productDtos);
+        return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + "s retrieved Successfully",productDtos);
     }
 
 
