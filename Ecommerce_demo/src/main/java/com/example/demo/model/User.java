@@ -8,9 +8,8 @@ import javax.persistence.*;
 import java.util.List;
 
 @Data
-@Entity
+@Entity(name = "user")
 public class User extends BaseModel {
-    @NaturalId
     private String username;
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)

@@ -6,9 +6,11 @@ import com.example.demo.repository.CategoriesRepository;
 import com.example.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
+import java.util.Date;
 
 @Configuration
 public class TestProduct {
@@ -24,7 +26,6 @@ public class TestProduct {
    @PostConstruct
     public void init() {
         Product product = new Product();
-      //  product.setId(Long.parseLong("10"));
         product.setName("Mango");
         product.setImage("https://www.pic.com/image.png");
         product.setMainPrice(500.50);
@@ -35,6 +36,8 @@ public class TestProduct {
         product.setStock(10000);
 
         Categories categories = new Categories();
+        //categories.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        categories.setCreatedAt(new Date());
         categories.setName("Mango");
         categories = categoriesRepository.save(categories);
         categories.setProducts(Arrays.asList(product));
