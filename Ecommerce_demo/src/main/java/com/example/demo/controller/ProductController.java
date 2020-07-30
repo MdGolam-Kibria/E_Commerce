@@ -79,6 +79,7 @@ public class ProductController {
 
     @GetMapping(UrlConstraint.ProductManagement.GET_ALL)
     public Response getAllProducts(HttpServletRequest request) {
+
         return productService.getAll();
     }
 }

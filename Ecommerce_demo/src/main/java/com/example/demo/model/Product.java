@@ -13,7 +13,6 @@ public class Product extends BaseModel {
     private double mainPrice;
     private double discountPrice;
     private String discountNote;
-    //private String categories;//arekta table kore many to many retion make korte hobe ....ekata product er onek cat. ekta catego...onek product thakte pare
     private int quantity;
     private String description;
     private int stock;
