@@ -1,9 +1,12 @@
 package com.example.demo.dto;
 
+import com.example.demo.model.Categories;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class ProductDto {
@@ -16,12 +19,14 @@ public class ProductDto {
     private Double mainPrice;
     private Double discountPrice;
     private String discountNote;
-    @NotEmpty(message = "Categories is Mandatory")
-    private String categories;
+    //    @NotEmpty(message = "Categories is Mandatory")
+//    private String categories;
     @NotNull(message = "Quantity is Mandatory")
     private int quantity;
     @NotEmpty(message = "Description is mandatory")
     private String description;
     @NotNull(message = "Stock is mandatory")
     private int stock;
+
+    private List<Categories> categories ;
 }

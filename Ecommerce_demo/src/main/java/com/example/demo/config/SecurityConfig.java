@@ -17,6 +17,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -46,6 +50,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+//        StringBuffer urlxyz = new StringBuffer();//eta antMatchers e bosiya dibo...
+//        List<Map<String, String>> listRoleUrlmap = new ArrayList<>();
+//        listRoleUrlmap.forEach(stringStringMap -> {
+//            if (stringStringMap.containsKey("xyz")){///xyz is a role
+//                urlxyz.append(stringStringMap.get("xyz"));
+//            }
+//        });
         String allPrefix = "/*";
         http.cors()
                 .and()
@@ -58,16 +69,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(UrlConstraint.AuthManagement.ROOT + allPrefix)
+                .antMatchers(UrlConstraint.AuthManagement.ROOT+allPrefix ,UrlConstraint.ProductManagement.ROOT+ UrlConstraint.ProductManagement.GET_ALL,UrlConstraint.ProductManagement.ROOT+ UrlConstraint.ProductManagement.GET)////here
                 .permitAll()
-                //.antMatchers("/auth").hasRole("ROLE_ADMIN")
+                .antMatchers(UrlConstraint.ProductManagement.ROOT + UrlConstraint.ProductManagement.CREATE)//
+                .hasRole("ADMIN")//
+//                .antMatchers(UrlConstraint.ProductManagement.ROOT + UrlConstraint.ProductManagement.CREATE)//
+//                .hasRole("xyz")//chile avabe add korte parbo.
                 .anyRequest().authenticated();
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(UrlConstraint.ProductManagement.ROOT + UrlConstraint.ProductManagement.GET_ALL);
-        web.ignoring().antMatchers(UrlConstraint.ProductManagement.ROOT + UrlConstraint.ProductManagement.GET);
     }
 }

@@ -11,7 +11,8 @@ public class CheckUserRole {
         for (int i = 0; i < userRoles.size(); i++) {
             if (userRoles.get(i).getName().equals("ROLE_ADMIN")) {
                 return userRoles.get(i).getName();
-            } else if (userRoles.get(i).getName().equals("ROLE_USER")) {
+            }
+            if (userRoles.get(i).getName().equals("ROLE_USER")) {
                 return userRoles.get(i).getName();
             }
         }

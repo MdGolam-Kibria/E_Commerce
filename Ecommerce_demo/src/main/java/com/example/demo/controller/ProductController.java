@@ -40,7 +40,7 @@ public class ProductController {
         String requestedUserName = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsernameAndIsActiveTrue(requestedUserName);
         if (user != null) {
-            if (checkUserRole.getRoleType(user.getRoles()).equals(UrlConstraint.ADMIN)) {
+            if (checkUserRole.getRoleType(user.getRoles()).equals(UrlConstraint.ADMIN)) {///f
                 return productService.save(productDto);
             }
         }
