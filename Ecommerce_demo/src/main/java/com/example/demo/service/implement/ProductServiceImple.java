@@ -58,15 +58,16 @@ public class ProductServiceImple implements ProductService {
     @Override
     public Response get(Long id) {
         Product product = productRepository.findByIdAndIsActiveTrue(id);
-        if(product != null){
+        if (product != null) {
             ProductDto productDto = modelMapper.map(product, ProductDto.class);
-            if(product != null){
-                return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root+" retrieved Successfully", productDto);
-            }else {
+            if (product != null) {
+                int numberOfRow = productRepository.countAllByIsActiveTrue();
+                return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + " retrieved Successfully", productDto,1,numberOfRow);
+            } else {
                 return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error Occurs");
             }
         }
-        return ResponseBuilder.getFailureResponce(HttpStatus.NOT_FOUND, root+" not found");
+        return ResponseBuilder.getFailureResponce(HttpStatus.NOT_FOUND, root + " not found");
     }
 
     @Override
@@ -86,9 +87,10 @@ public class ProductServiceImple implements ProductService {
 
     @Override
     public Response getAll() {
-        List<Product>products = productRepository.findAllByIsActiveTrue();
+        List<Product> products = productRepository.findAllByIsActiveTrue();
         List<ProductDto> productDtos = this.getProducts(products);
-        return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + "s retrieved Successfully",productDtos);
+        int numberOfRow = productRepository.countAllByIsActiveTrue();
+        return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + "s retrieved Successfully", productDtos,products.size(),numberOfRow);
     }
 
 

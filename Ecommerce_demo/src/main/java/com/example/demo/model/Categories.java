@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @Entity
 public class Categories extends BaseModel {
-    private String categoryName;//new
+    private String categoryName;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "product_sub_categories", joinColumns = @JoinColumn(name = "categories_id"),
             inverseJoinColumns = @JoinColumn(name = "sub_category_id"))
