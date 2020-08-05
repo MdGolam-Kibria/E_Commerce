@@ -3,12 +3,14 @@ package com.example.demo.config;
 import com.example.demo.filter.JwtAuthenticationFilter;
 import com.example.demo.service.CustomUserDetailsService;
 import com.example.demo.util.UrlConstraint;
+import com.example.demo.util.UrlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,6 +25,11 @@ import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(
+        securedEnabled = true,
+        jsr250Enabled = true,//@RolesAllowed
+        prePostEnabled = true
+)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
@@ -66,16 +73,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(myAuthenticationEntryPoint)
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers(UrlConstraint.AuthManagement.ROOT+allPrefix ,UrlConstraint.ProductManagement.ROOT+ UrlConstraint.ProductManagement.GET_ALL,UrlConstraint.ProductManagement.ROOT+ UrlConstraint.ProductManagement.GET)////here
-                .permitAll()
-                .antMatchers(UrlConstraint.ProductManagement.ROOT + UrlConstraint.ProductManagement.CREATE)//
-                .hasRole("ADMIN")//
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);//.and().next
+        for (String s : UrlUtil.permitAllUrl) {
+            http.authorizeRequests()
+                    .antMatchers(s)
+                    .permitAll();
+        }
+        //  http.authorizeRequests().antMatchers(UrlConstraint.ProductManagement.ROOT + UrlConstraint.ProductManagement.CREATE)//
+        //.hasRole("ADMIN")//
 //                .antMatchers(UrlConstraint.ProductManagement.ROOT + UrlConstraint.ProductManagement.CREATE)//
 //                .hasRole("xyz")//chile avabe add korte parbo.
-                .anyRequest().authenticated();
+        http.authorizeRequests().anyRequest().authenticated();
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

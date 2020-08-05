@@ -10,6 +10,7 @@ import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,7 @@ public class ProductServiceImple implements ProductService {
         this.modelMapper = modelMapper;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public Response save(ProductDto productDto) {
         Product product = modelMapper.map(productDto, Product.class);
@@ -39,6 +41,7 @@ public class ProductServiceImple implements ProductService {
         return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public Response update(Long id, ProductDto productDto) {
         Product product = productRepository.findByIdAndIsActiveTrue(id);
@@ -62,7 +65,7 @@ public class ProductServiceImple implements ProductService {
             ProductDto productDto = modelMapper.map(product, ProductDto.class);
             if (product != null) {
                 int numberOfRow = productRepository.countAllByIsActiveTrue();
-                return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + " retrieved Successfully", productDto,1,numberOfRow);
+                return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + " retrieved Successfully", productDto, 1, numberOfRow);
             } else {
                 return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error Occurs");
             }
@@ -70,6 +73,7 @@ public class ProductServiceImple implements ProductService {
         return ResponseBuilder.getFailureResponce(HttpStatus.NOT_FOUND, root + " not found");
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public Response delete(Long id) {
         Product product = productRepository.findByIdAndIsActiveTrue(id);
@@ -90,7 +94,7 @@ public class ProductServiceImple implements ProductService {
         List<Product> products = productRepository.findAllByIsActiveTrue();
         List<ProductDto> productDtos = this.getProducts(products);
         int numberOfRow = productRepository.countAllByIsActiveTrue();
-        return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + "s retrieved Successfully", productDtos,products.size(),numberOfRow);
+        return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + "s retrieved Successfully", productDtos, products.size(), numberOfRow);
     }
 
 

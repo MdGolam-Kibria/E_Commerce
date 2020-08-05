@@ -12,10 +12,12 @@ import com.example.demo.view.Response;
 import com.example.demo.view.ResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -60,6 +62,7 @@ public class ProductController {
         return ResponseBuilder.getFailureResponce(HttpStatus.BAD_REQUEST, "Sorry You do not have permission for this URL");
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping(UrlConstraint.ProductManagement.GET)
     public Response getProduct(@PathVariable("id") Long id, HttpServletRequest request) {
         return productService.get(id);
@@ -77,6 +80,7 @@ public class ProductController {
         return ResponseBuilder.getFailureResponce(HttpStatus.BAD_REQUEST, "Sorry You do not have permission for this URL");
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping(UrlConstraint.ProductManagement.GET_ALL)
     public Response getAllProducts(HttpServletRequest request) {
 
