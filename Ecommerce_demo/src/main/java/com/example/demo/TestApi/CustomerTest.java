@@ -37,9 +37,9 @@ public class CustomerTest {
         String roleName = "ROLE_CUSTOMER";
         int roleExistCount = roleRepository.countByNameAndIsActiveTrue(roleName);
         Role role = null;
-        if (roleExistCount==1){
-            role =  roleRepository.findByNameAndIsActiveTrue(roleName);
-        }else {
+        if (roleExistCount == 1) {
+            role = roleRepository.findByNameAndIsActiveTrue(roleName);
+        } else {
             role = new Role();
             role.setName(roleName);
             role = roleRepository.save(role);
@@ -48,20 +48,20 @@ public class CustomerTest {
         Phone phone = new Phone();
         Address address = new Address();
 //        if (user==null){
-            user = new User();
-            user.setUsername("kibria");
-            user.setPassword(passwordEncoder.encode("413152413152"));
-            user.setEmail("kibria@gmail.com");
-            user.setArea("Dhanmondi");
+        user = new User();
+        user.setUsername("kibria");
+        user.setPassword(passwordEncoder.encode("413152413152"));
+        user.setEmail("kibria@gmail.com");
+        user.setArea("Dhanmondi");
 
-            phone.setPhone("01531921892");
-            user.setPhones(Arrays.asList(phone));
+        phone.setPhone("01531921892");
+        user.setPhones(Arrays.asList(phone));
 
-            address.setAddress("51/12, johnson road, 1100. City: Dhaka");
-            user.setAddresses(Arrays.asList(address));
+        address.setAddress("51/12, johnson road, 1100. City: Dhaka");
+        user.setAddresses(Arrays.asList(address));
         //}
         user.setRoles(Arrays.asList(role));
-        user  =userRepository.save(user);
+        user = userRepository.save(user);
         phone.setUser(user);
         address.setUser(user);
 
