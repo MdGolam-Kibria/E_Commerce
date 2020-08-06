@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 public class Role extends BaseModel{
     @NaturalId
-    @Column(name = "name",unique = true,length = 128)
+    @Column(name = "name",length = 128)
     private String name;
     @ManyToMany(mappedBy = "roles")
     @JsonIgnore

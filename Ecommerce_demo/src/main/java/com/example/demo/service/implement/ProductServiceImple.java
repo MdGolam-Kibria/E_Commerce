@@ -1,5 +1,6 @@
 package com.example.demo.service.implement;
 
+import com.example.demo.annotation.IsAdmin;
 import com.example.demo.dto.ProductDto;
 import com.example.demo.model.Product;
 import com.example.demo.repository.ProductRepository;
@@ -29,7 +30,7 @@ public class ProductServiceImple implements ProductService {
         this.modelMapper = modelMapper;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @IsAdmin
     @Override
     public Response save(ProductDto productDto) {
         Product product = modelMapper.map(productDto, Product.class);
@@ -41,7 +42,7 @@ public class ProductServiceImple implements ProductService {
         return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @IsAdmin
     @Override
     public Response update(Long id, ProductDto productDto) {
         Product product = productRepository.findByIdAndIsActiveTrue(id);
@@ -73,7 +74,7 @@ public class ProductServiceImple implements ProductService {
         return ResponseBuilder.getFailureResponce(HttpStatus.NOT_FOUND, root + " not found");
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @IsAdmin
     @Override
     public Response delete(Long id) {
         Product product = productRepository.findByIdAndIsActiveTrue(id);

@@ -74,9 +74,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);//.and().next
-        for (String s : UrlUtil.permitAllUrl) {
+        for (String url : UrlUtil.permitAllUrl) {
             http.authorizeRequests()
-                    .antMatchers(s)
+                    .antMatchers(url)
                     .permitAll();
         }
         //  http.authorizeRequests().antMatchers(UrlConstraint.ProductManagement.ROOT + UrlConstraint.ProductManagement.CREATE)//
@@ -87,3 +87,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
+

@@ -11,9 +11,19 @@ import java.util.List;
 @Data
 @Entity(name = "user")
 public class User extends BaseModel {
-    @JsonProperty("email")
+
     private String username;
     private String password;
+    private String email;
+    private String area;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    @ToString.Exclude
+    private List<Phone> phones;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    @ToString.Exclude
+    private List<Address> addresses;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     @ToString.Exclude

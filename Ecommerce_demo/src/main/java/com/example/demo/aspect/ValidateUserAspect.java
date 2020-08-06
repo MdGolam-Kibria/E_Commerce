@@ -32,6 +32,7 @@ public class ValidateUserAspect {
     }
 
     @After(value = "execution(public * com.example.demo.controller.ProductController.*(..)) " +
+            " || execution(public * com.example.demo.controller.CustomerController.*(..))" +
             "&& ! execution(public * com.example.demo.controller.ProductController.getProduct(..))" +
             "&& ! execution(public * com.example.demo.controller.ProductController.getAllProducts(..))")
     public void getMethodData(JoinPoint joinPoint) {
@@ -48,9 +49,10 @@ public class ValidateUserAspect {
         User user = userRepository.findByUsernameAndIsActiveTrue(requestedUserName);
         if (user != null) {
             if (incomingRequest != null && checkUserRole.getRoleType(user.getRoles()).equals(UrlConstraint.ADMIN)) {
-                    LOGGER.info("\nProduct CRUD By  = " + requestedUserName +
-                            "\nMethod is = "+joinPoint.getSignature().getName()+
-                            "\nRequested url is = "+incomingRequest.getRequestURI());
+                LOGGER.info("\n CRUD By  = " + requestedUserName +
+                        "\nMethod is = " + joinPoint.getSignature().getName() +
+                        "\nRequested url is = " + incomingRequest.getRequestURI()+
+                        "\n"+"IP Address = "+incomingRequest.getRemoteAddr());
             }
         }
     }

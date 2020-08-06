@@ -32,7 +32,7 @@ public class AuthServiceImple implements AuthService {
     public Response login(LoginDto loginDto) {
         User user = userRepository.findByUsernameAndIsActiveTrue(loginDto.getUsername());
         if (user==null){
-            return ResponseBuilder.getFailureResponce(HttpStatus.UNAUTHORIZED,"Invalid Email or password");
+            return ResponseBuilder.getFailureResponce(HttpStatus.UNAUTHORIZED,"Invalid UserName or password");
         }
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(),loginDto.getPassword()));
         if (authentication.isAuthenticated()){
@@ -41,6 +41,6 @@ public class AuthServiceImple implements AuthService {
             loginResponseDto.setUsername(user.getUsername());
             return ResponseBuilder.getSuccessResponce(HttpStatus.OK, "Logged In Success", loginResponseDto);
         }
-        return ResponseBuilder.getFailureResponce(HttpStatus.BAD_REQUEST, "Invalid Email or password");
+        return ResponseBuilder.getFailureResponce(HttpStatus.BAD_REQUEST, "Invalid UserName or password");
     }
 }
