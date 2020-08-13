@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.annotation.ApiController;
+import com.example.demo.annotation.IsAdmin;
 import com.example.demo.annotation.ValidateData;
 import com.example.demo.dto.ProductDto;
 import com.example.demo.model.User;
@@ -38,6 +39,7 @@ public class ProductController {
 
     @ValidateData
     @PostMapping(UrlConstraint.ProductManagement.CREATE)
+    @IsAdmin
     public Response createProduct(@Valid @RequestBody ProductDto productDto, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
         String requestedUserName = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsernameAndIsActiveTrue(requestedUserName);
@@ -51,6 +53,7 @@ public class ProductController {
 
     @ValidateData
     @PutMapping(UrlConstraint.ProductManagement.UPDATE)
+    @IsAdmin
     public Response updateProduct(@PathVariable("id") Long id, @Valid @RequestBody ProductDto productDto, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
         String requestedUserName = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsernameAndIsActiveTrue(requestedUserName);
@@ -69,6 +72,7 @@ public class ProductController {
     }
 
     @DeleteMapping(UrlConstraint.ProductManagement.DELETE)
+    @IsAdmin
     public Response deleteProduct(@PathVariable("id") Long id, HttpServletRequest request) {
         String requestedUserName = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsernameAndIsActiveTrue(requestedUserName);

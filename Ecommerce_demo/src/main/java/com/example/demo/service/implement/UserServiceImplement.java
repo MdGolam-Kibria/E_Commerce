@@ -2,8 +2,8 @@ package com.example.demo.service.implement;
 
 import com.example.demo.annotation.IsAdmin;
 import com.example.demo.dto.UserDto;
-import com.example.demo.model.Role;
 import com.example.demo.model.User;
+import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import com.example.demo.view.Response;
@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service("userService")
@@ -25,12 +24,15 @@ public class UserServiceImplement implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
+
 
     @Autowired
-    public UserServiceImplement(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
+    public UserServiceImplement(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -38,7 +40,6 @@ public class UserServiceImplement implements UserService {
         return userRepository.findByUsernameAndIsActiveTrue(username);
     }
 
-    @IsAdmin
     @Override
     public Response getAllusers() {
         List<User> users = userRepository.findAllByIsActiveTrue();

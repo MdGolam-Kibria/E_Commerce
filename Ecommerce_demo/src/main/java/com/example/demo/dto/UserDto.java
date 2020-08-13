@@ -25,7 +25,7 @@ public class UserDto {
     private String email;
     @NotBlank(message = "Area is Mandatory")
     private String area;
-    @NotNull(message = "Phone Number is Mandatory")
+    @NotEmpty(message = "Phone Number is Mandatory")
     private List<@Valid Phone> phones;
     @NotEmpty(message = "Address is Mandatory")
     private List<@Valid Address> addresses;

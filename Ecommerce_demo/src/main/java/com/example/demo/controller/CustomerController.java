@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.annotation.ApiController;
+import com.example.demo.annotation.IsAdmin;
 import com.example.demo.annotation.ValidateData;
 import com.example.demo.dto.UserDto;
 import com.example.demo.service.UserService;
@@ -27,6 +28,7 @@ public class CustomerController {
     }
 
     @GetMapping(UrlConstraint.CustomerManagement.GET_ALL_CUSTOMER)
+    @IsAdmin
     public Response getAllUsers(HttpServletRequest request) {
         return userService.getAllusers();
     }

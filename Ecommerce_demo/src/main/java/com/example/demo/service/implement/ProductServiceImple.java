@@ -30,7 +30,6 @@ public class ProductServiceImple implements ProductService {
         this.modelMapper = modelMapper;
     }
 
-    @IsAdmin
     @Override
     public Response save(ProductDto productDto) {
         Product product = modelMapper.map(productDto, Product.class);
@@ -42,7 +41,6 @@ public class ProductServiceImple implements ProductService {
         return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
     }
 
-    @IsAdmin
     @Override
     public Response update(Long id, ProductDto productDto) {
         Product product = productRepository.findByIdAndIsActiveTrue(id);
@@ -74,7 +72,6 @@ public class ProductServiceImple implements ProductService {
         return ResponseBuilder.getFailureResponce(HttpStatus.NOT_FOUND, root + " not found");
     }
 
-    @IsAdmin
     @Override
     public Response delete(Long id) {
         Product product = productRepository.findByIdAndIsActiveTrue(id);
