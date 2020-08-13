@@ -1,6 +1,7 @@
 package com.example.demo.service.implement;
 
 import com.example.demo.annotation.IsAdmin;
+import com.example.demo.annotation.IsAdminOrCustomer;
 import com.example.demo.dto.ProductDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.model.Product;
@@ -14,8 +15,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +46,17 @@ public class UserServiceImplement implements UserService {
         int numberOfRow = userRepository.countAllByIsActiveTrue();
         return ResponseBuilder.getSuccessResponce(HttpStatus.OK, "Users Retrieved Successfully", userDtos, users.size(), numberOfRow);
 
+    }
+
+    @Override
+    public Response createUser(UserDto userDto) {
+        User user = modelMapper.map(userDto, User.class);
+        user.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        user = userRepository.save(user);
+        if (user != null) {
+            return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "User Created Successfully", null);
+        }
+        return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
     }
 
     private List<UserDto> getUsers(List<User> users) {

@@ -1,9 +1,11 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.UserDto;
 import com.example.demo.model.User;
 import com.example.demo.view.Response;
 
 public interface UserService {
     User getUserByUserName(String username);
     Response getAllusers();
+    Response createUser(UserDto userDto);
 }
