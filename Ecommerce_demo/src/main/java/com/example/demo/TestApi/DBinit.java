@@ -37,7 +37,7 @@ public class DBinit {
         this.addressRepository = addressRepository;
     }
 
-    @PostConstruct
+    //@PostConstruct
     public void test() {
 
         String roleName = "ROLE_ADMIN";

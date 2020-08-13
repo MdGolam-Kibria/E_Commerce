@@ -24,7 +24,7 @@ public class User extends BaseModel {
     @ToString.Exclude
     private List<Address> addresses;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)//ekhane cascade tyoe ta chilo na
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     @ToString.Exclude
     private List<Role> roles;

@@ -7,6 +7,7 @@ import org.hibernate.annotations.NaturalId;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 @Data
@@ -14,6 +15,7 @@ import java.util.List;
 public class Role extends BaseModel{
     @NaturalId
     @Column(name = "name",length = 128)
+    @NotEmpty(message = "Role name Is Mandatory")
     private String name;
     @ManyToMany(mappedBy = "roles")
     @JsonIgnore

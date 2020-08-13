@@ -32,7 +32,7 @@ public class CustomerTest {
         this.addressRepository = addressRepository;
     }
 
-    @PostConstruct
+    //@PostConstruct
     public void Test() {
         String roleName = "ROLE_CUSTOMER";
         int roleExistCount = roleRepository.countByNameAndIsActiveTrue(roleName);
@@ -69,3 +69,28 @@ public class CustomerTest {
         address = addressRepository.save(address);
     }
 }
+//for test create a user from post man by json :
+
+//{
+//        "username": "rabbani",
+//        "password":"kibria1234568",
+//        "email": "kibria@gmail.com",
+//        "area": "Dhanmondi",
+//        "phones": [
+//        {
+//        "phone":"01531921892"
+//        }
+//        ],
+//        "addresses":[
+//        {
+//        "address":"dhanmondi dhaka 1209"
+//        }
+//        ],
+//        "roles":[
+//        {
+//        "name":"ROLE_ADMIN"
+//        }
+//        ]
+//        }
+
+

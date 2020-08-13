@@ -1,10 +1,8 @@
 package com.example.demo.service.implement;
 
 import com.example.demo.annotation.IsAdmin;
-import com.example.demo.annotation.IsAdminOrCustomer;
-import com.example.demo.dto.ProductDto;
 import com.example.demo.dto.UserDto;
-import com.example.demo.model.Product;
+import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
@@ -14,23 +12,25 @@ import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.security.RolesAllowed;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service("userService")
 public class UserServiceImplement implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImplement(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserServiceImplement(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -52,9 +52,10 @@ public class UserServiceImplement implements UserService {
     public Response createUser(UserDto userDto) {
         User user = modelMapper.map(userDto, User.class);
         user.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user = userRepository.save(user);
         if (user != null) {
-            return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "User Created Successfully", null);
+            return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "User Created Successfully", user.getUsername());
         }
         return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
     }
