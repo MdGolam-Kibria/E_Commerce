@@ -75,7 +75,7 @@ public class UserServiceImplement implements UserService {
         Role role;
         if (roleCustomerCount == 0) {
             role = new Role();
-            role.setName(RoleConstraint.ROLE_CUSTOMER.name());
+            role.setName(RoleConstraint.ROLE_CUSTOMER.name());//get value from enum
             role = roleRepository.save(role);
         } else {
             role = roleRepository.findByNameAndIsActiveTrue(RoleConstraint.ROLE_CUSTOMER.name());
