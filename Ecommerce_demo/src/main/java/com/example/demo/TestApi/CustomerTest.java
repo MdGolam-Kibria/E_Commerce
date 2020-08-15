@@ -32,9 +32,9 @@ public class CustomerTest {
         this.addressRepository = addressRepository;
     }
 
-    //@PostConstruct
+//    @PostConstruct
     public void Test() {
-        String roleName = "ROLE_CUSTOMER";
+        String roleName = "ROLE_ADMIN";
         int roleExistCount = roleRepository.countByNameAndIsActiveTrue(roleName);
         Role role = null;
         if (roleExistCount == 1) {
@@ -55,15 +55,15 @@ public class CustomerTest {
         user.setArea("Dhanmondi");
 
         phone.setPhone("01531921892");
-        user.setPhones(Arrays.asList(phone));
+        user.setPhoneList(Arrays.asList(phone));
 
-        address.setAddress("51/12, johnson road, 1100. City: Dhaka");
-        user.setAddresses(Arrays.asList(address));
+        address.setName("51/12, johnson road, 1100. City: Dhaka");
+        user.setAddressList(Arrays.asList(address));
         //}
         user.setRoles(Arrays.asList(role));
         user = userRepository.save(user);
         phone.setUser(user);
-        address.setUser(user);
+        address.setUsers(Arrays.asList(user));
 
         phone = phoneRepository.save(phone);
         address = addressRepository.save(address);

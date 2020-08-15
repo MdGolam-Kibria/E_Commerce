@@ -25,12 +25,10 @@ public class UserDto {
     private String email;
     @NotBlank(message = "Area is Mandatory")
     private String area;
-    @NotEmpty(message = "Phone Number is Mandatory")
-    private List<@Valid Phone> phones;
-    @NotEmpty(message = "Address is Mandatory")
-    private List<@Valid Address> addresses;
-    @NotEmpty(message = "Role is Mandatory")
-    private List<@Valid Role> roles;
+
+    private List<PhoneDto> phoneList;
+
+    private List<AddressDto> addressList;
 
     @JsonIgnore
     public String getPassword() {

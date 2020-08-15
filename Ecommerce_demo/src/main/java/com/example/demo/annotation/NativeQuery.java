@@ -11,7 +11,7 @@ public @interface NativeQuery {
 
     java.lang.String countProjection() default "";
 
-    boolean nativeQuery() default true;
+    boolean nativeQuery() default true;//for direct query
 
     java.lang.String name() default "";
 
