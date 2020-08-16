@@ -1,2 +1,2 @@
 # E_Commerce
-Spring boot ecommerce application..
+Spring boot e-commerce application..
