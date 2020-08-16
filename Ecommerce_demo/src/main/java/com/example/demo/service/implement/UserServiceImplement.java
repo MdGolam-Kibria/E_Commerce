@@ -51,20 +51,6 @@ public class UserServiceImplement implements UserService {
     }
 
     @Override
-    public User getUserByUserName(String username) {
-        return userRepository.findByUsernameAndIsActiveTrue(username);
-    }
-
-    @Override
-    public Response getAllusers() {
-        List<User> users = userRepository.findAllByIsActiveTrue();
-        List<UserDto> userDtos = this.getUsers(users);
-        int numberOfRow = userRepository.countAllByIsActiveTrue();
-        return ResponseBuilder.getSuccessResponce(HttpStatus.OK, "Users Retrieved Successfully", userDtos, users.size(), numberOfRow);
-
-    }
-
-    @Override
     public Response createUser(UserDto userDto) {
         User user = modelMapper.map(userDto, User.class);
         user.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -75,7 +61,7 @@ public class UserServiceImplement implements UserService {
         Role role;
         if (roleCustomerCount == 0) {
             role = new Role();
-            role.setName(RoleConstraint.ROLE_CUSTOMER.name());
+            role.setName(RoleConstraint.ROLE_CUSTOMER.name());//get value from enum
             role = roleRepository.save(role);
         } else {
             role = roleRepository.findByNameAndIsActiveTrue(RoleConstraint.ROLE_CUSTOMER.name());
@@ -91,6 +77,20 @@ public class UserServiceImplement implements UserService {
             return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "User Created Successfully", user.getUsername());
         }
         return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
+    }
+
+    @Override
+    public User getUserByUserName(String username) {
+        return userRepository.findByUsernameAndIsActiveTrue(username);
+    }
+
+    @Override
+    public Response getAllusers() {
+        List<User> users = userRepository.findAllByIsActiveTrue();
+        List<UserDto> userDtos = this.getUsers(users);
+        int numberOfRow = userRepository.countAllByIsActiveTrue();
+        return ResponseBuilder.getSuccessResponce(HttpStatus.OK, "Users Retrieved Successfully", userDtos, users.size(), numberOfRow);
+
     }
 
     private List<UserDto> getUsers(List<User> users) {

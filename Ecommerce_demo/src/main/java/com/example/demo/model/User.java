@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 @Entity(name = "user")
 public class User extends BaseModel {
+
     private String username;
     private String password;
     private String email;
@@ -21,13 +22,14 @@ public class User extends BaseModel {
     @ToString.Exclude
     private List<Phone> phoneList;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+
+    @ManyToMany(fetch = FetchType.LAZY)//ekhane cascade tyoe ta chilo na
     @JoinTable(name = "user_address", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "address_id"))
     @ToString.Exclude
     private List<Address> addressList;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)//ekhane cascade tyoe ta chilo na
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     @ToString.Exclude

@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 public class DBinit {
@@ -40,40 +41,52 @@ public class DBinit {
     //@PostConstruct
     public void test() {
 
-//        String roleName = "ROLE_ADMIN";
-//        int roleExistCount = roleRepository.countByNameAndIsActiveTrue(roleName);
-//        Role role = null;
-//        if (roleExistCount==1){
-//            role =  roleRepository.findByNameAndIsActiveTrue(roleName);
-//        }else {
-//            role = new Role();
-//            role.setName(roleName);
-//            role = roleRepository.save(role);
-//        }
-//        User user = userRepository.findByEmailAndIsActiveTrue("kibria@gmail.com");
-//        Phone phone = new Phone();
-//        Address address = new Address();
-//        //if (user==null){
-//            user = new User();
-//            user.setUsername(username);
-//            user.setPassword(passwordEncoder.encode(password));
-//            user.setEmail("golamkibria@gmail.com");
-//            user.setArea("New Market");
-//
-//            phone.setPhone("01782683986");
-//            user.setPhones(Arrays.asList(phone));
-//
-//            address.setAddress("51/12, johnson road, 1100. City: Dhaka");
-//            user.setAddresses(Arrays.asList(address));
-//        //}
-//        user.setRoles(Arrays.asList(role));
-//        user  =userRepository.save(user);
+        String roleName = "ROLE_ADMIN";
+        int roleExistCount = roleRepository.countByNameAndIsActiveTrue(roleName);
+        Role role = null;
+        if (roleExistCount==1){
+            role =  roleRepository.findByNameAndIsActiveTrue(roleName);
+        }else {
+            role = new Role();
+            role.setName(roleName);
+            role = roleRepository.save(role);
+        }
+        User user = userRepository.findByEmailAndIsActiveTrue("kibria@gmail.com");
+        Phone phone = new Phone();
+        Address address = new Address();
+        //if (user==null){
+        user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setEmail("golamkibria@gmail.com");
+        user.setArea("New Market");
+
+        phone.setPhone("01782683986");
+
+
+
+        address.setName("51/12, johnson road, 1100. City: Dhaka");
+        //address = addressRepository.save(address);
+
+        address = addressRepository.save(address);
+        user.setAddressList(Arrays.asList(address));
 //        phone.setUser(user);
-//        address.setUser(user);
+       //address.setUsers(Arrays.asList(user));
+//        user.setAddressList(Arrays.asList(address));
+
+        user.setPhoneList(Arrays.asList(phone));
+        user  =userRepository.save(user);
+        phone.setUser(user);
+        phone = phoneRepository.save(phone);
+        //phone = phoneRepository.save(phone);
+        //  address.setUsers(Arrays.asList(user));
+//        address = addressRepository.save(address);
+//        phone.setUser(user);
+//        address.setUsers(Arrays.asList(user));
 //
 //        phone = phoneRepository.save(phone);
 //        address = addressRepository.save(address);
 
-        // You should create some role here in run time.
+        //You should create some role here in run time.
     }
 }
