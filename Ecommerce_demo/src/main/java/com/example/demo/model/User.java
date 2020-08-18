@@ -29,7 +29,7 @@ public class User extends BaseModel {
     @ToString.Exclude
     private List<Address> addressList;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)//ekhane cascade tyoe ta chilo na
+    @ManyToMany(fetch = FetchType.EAGER)//ekhane cascade tyoe ta chilo na
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     @ToString.Exclude
