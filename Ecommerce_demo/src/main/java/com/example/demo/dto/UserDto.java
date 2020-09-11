@@ -1,14 +1,14 @@
 package com.example.demo.dto;
 
-import com.example.demo.model.Address;
-import com.example.demo.model.Phone;
-import com.example.demo.model.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
@@ -26,9 +26,9 @@ public class UserDto {
     @NotBlank(message = "Area is Mandatory")
     private String area;
 
-    private List<PhoneDto> phoneList;
+    private List<@Valid PhoneDto> phoneList;
 
-    private List<AddressDto> addressList;
+    private List<@Valid AddressDto> addressList;
 
     @JsonIgnore
     public String getPassword() {

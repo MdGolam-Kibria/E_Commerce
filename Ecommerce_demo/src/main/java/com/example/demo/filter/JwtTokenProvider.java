@@ -8,6 +8,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.UUID;
 
@@ -15,11 +16,12 @@ import java.util.UUID;
 public class JwtTokenProvider {
     private String secretKey = "SpringBootTutorial";
     private Long expireHour = Long.valueOf("5");
-    public String generateToken(Authentication authentication){
+    public String generateToken(Authentication authentication, HttpServletRequest request){
         UserPrincipal userPrinciple = (UserPrincipal) authentication.getPrincipal();
         Date now = new Date();
         return Jwts.builder().setId(UUID.randomUUID().toString())
                 .claim("username", userPrinciple.getUsername())
+                .claim("clientIp", request.getRemoteAddr())
 //                .claim("role", userPrinciple.getAuthorities().stream().map(grantedAuthority -> ))
                 .setSubject(String.valueOf(userPrinciple.getId()))
                 .setIssuedAt(now).setExpiration(DataUtils.getExpirationTime(expireHour))
@@ -32,10 +34,20 @@ public class JwtTokenProvider {
                 .setSigningKey(secretKey).parseClaimsJws(token).getBody();
         return Long.valueOf(claims.getSubject());
     }
+    public String getClientIpFromJwtToken(String token) {
+        Claims claims = getClaims(token);
+        return (String) claims.get("clientIp");
+    }
 
-    public Boolean isValidateToken(String token){
+    private Claims getClaims(String token) {
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+    }
+    public Boolean isValidateToken(String token,HttpServletRequest request){
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            if (!request.getRemoteAddr().equals(getClientIpFromJwtToken(token))){//jodi user er ip address same na hoi tahole token ar kaj korbe na
+                return false;
+            }
             return true;
         }catch (Exception e){
             return false;

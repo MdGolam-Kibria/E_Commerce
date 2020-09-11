@@ -19,10 +19,6 @@ public class Address extends BaseModel {
 //    @NotEmpty(message = "Address is Mandatory")
 //    @Size(min = 8,message = "length should be 8 or more")
     private String name;
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    @JsonIgnore
-//    private User user;
 
     @ManyToMany(mappedBy = "addressList")
     @JsonIgnore

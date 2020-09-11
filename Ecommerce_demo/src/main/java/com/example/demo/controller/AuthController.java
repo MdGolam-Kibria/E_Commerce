@@ -8,6 +8,7 @@ import com.example.demo.view.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -26,8 +27,8 @@ public class AuthController {
     }
 
     @ValidateData
-    @GetMapping(UrlConstraint.AuthManagement.LOGIN)
+    @PostMapping(UrlConstraint.AuthManagement.LOGIN)
     public Response login(@RequestBody @Valid LoginDto loginDto, BindingResult result, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        return authService.login(loginDto);
+        return authService.login(loginDto,httpServletRequest);
     }
 }

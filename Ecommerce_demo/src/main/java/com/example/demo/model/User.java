@@ -23,7 +23,7 @@ public class User extends BaseModel {
     private List<Phone> phoneList;
 
 
-    @ManyToMany(fetch = FetchType.LAZY)//ekhane cascade tyoe ta chilo na
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_address", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "address_id"))
     @ToString.Exclude

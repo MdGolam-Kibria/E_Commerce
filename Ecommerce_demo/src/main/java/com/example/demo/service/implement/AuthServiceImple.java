@@ -15,6 +15,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Service("authService")
 public class AuthServiceImple implements AuthService {
     private final UserRepository userRepository;
@@ -29,7 +31,7 @@ public class AuthServiceImple implements AuthService {
     }
 
     @Override
-    public Response login(LoginDto loginDto) {
+    public Response login(LoginDto loginDto, HttpServletRequest request) {
         User user = userRepository.findByUsernameAndIsActiveTrue(loginDto.getUsername());
         if (user==null){
             return ResponseBuilder.getFailureResponce(HttpStatus.UNAUTHORIZED,"Invalid UserName or password");
@@ -37,7 +39,7 @@ public class AuthServiceImple implements AuthService {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(),loginDto.getPassword()));
         if (authentication.isAuthenticated()){
             LoginResponseDto loginResponseDto = new LoginResponseDto();
-            loginResponseDto.setToken(jwtTokenProvider.generateToken(authentication));
+            loginResponseDto.setToken(jwtTokenProvider.generateToken(authentication,request));
             loginResponseDto.setUsername(user.getUsername());
             return ResponseBuilder.getSuccessResponce(HttpStatus.OK, "Logged In Success", loginResponseDto);
         }
