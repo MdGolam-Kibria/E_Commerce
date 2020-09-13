@@ -2,6 +2,7 @@ package com.example.demo.service.implement;
 
 import com.example.demo.dto.CategoriesDto;
 import com.example.demo.dto.ProductDto;
+import com.example.demo.jdbc.DataSourceFromMyOwnSql;
 import com.example.demo.model.Categories;
 import com.example.demo.model.Product;
 import com.example.demo.model.SubCategories;
@@ -19,8 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Service("productService")
@@ -28,14 +27,16 @@ public class ProductServiceImple implements ProductService {
     private final ProductRepository productRepository;
     private final CategoriesRepository categoriesRepository;
     private final SubCategoriesRepository subCategoriesRepository;
+    private final DataSourceFromMyOwnSql dataSourceFromMyOwnSql;
     private final ModelMapper modelMapper;
     private String root = "Product";
 
     @Autowired
-    public ProductServiceImple(ProductRepository productRepository, CategoriesRepository categoriesRepository, SubCategoriesRepository subCategoriesRepository, ModelMapper modelMapper) {
+    public ProductServiceImple(ProductRepository productRepository, CategoriesRepository categoriesRepository, SubCategoriesRepository subCategoriesRepository, DataSourceFromMyOwnSql dataSourceFromMyOwnSql, ModelMapper modelMapper) {
         this.productRepository = productRepository;
         this.categoriesRepository = categoriesRepository;
         this.subCategoriesRepository = subCategoriesRepository;
+        this.dataSourceFromMyOwnSql = dataSourceFromMyOwnSql;
         this.modelMapper = modelMapper;
     }
 
@@ -123,7 +124,41 @@ public class ProductServiceImple implements ProductService {
         List<Categories> categoriesList = categoriesRepository.findAllByIsActiveTrue();
         List<CategoriesDto> categoriesDtos = this.getAllCategories(categoriesList);
         int numberOfRow = categoriesRepository.countAllByIsActiveTrue();
-        return ResponseBuilder.getSuccessResponce(HttpStatus.OK, "Categories reteieved Successfully", categoriesDtos, categoriesList.size(), numberOfRow);
+        return ResponseBuilder.getSuccessResponce(HttpStatus.OK, "Categories retrieved Successfully", categoriesDtos, categoriesList.size(), numberOfRow);
+    }
+
+    @Override
+    public Response getProductsByCategoryId(Long categoryId) {
+        List<Long> productIdList = dataSourceFromMyOwnSql.getProductsIdByCategoriesId(categoryId);
+        if (productIdList.size() == 0) {
+            return ResponseBuilder.getSuccessResponce(HttpStatus.NO_CONTENT, "There is no category with this resource", null);
+        }
+        List<Product> productList = new ArrayList<>();
+        productIdList.forEach(productId -> {
+            productList.add(productRepository.findByIdAndIsActiveTrue(productId));
+        });
+        if (productIdList.size() != 0) {
+            return ResponseBuilder.getSuccessResponce(HttpStatus.OK, "Products retrieved Successfully", productList, productList.size(), productIdList.size());
+        } else {
+            return ResponseBuilder.getSuccessResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", null);
+        }
+    }
+
+    @Override
+    public Response getSubCategoriesCategoryId(Long categoryId) {
+        List<Long> subCategoriesIdList = dataSourceFromMyOwnSql.getSubCategoriesIdByCategoriesId(categoryId);
+        if (subCategoriesIdList.size() == 0) {
+            return ResponseBuilder.getSuccessResponce(HttpStatus.NO_CONTENT, "There is no sub category with this resource", null);
+        }
+        List<SubCategories> subCategoriesList = new ArrayList<>();
+        subCategoriesIdList.forEach(subCategoriesId -> {
+            subCategoriesList.add(subCategoriesRepository.findByIdAndIsActiveTrue(subCategoriesId));
+        });
+        if (subCategoriesIdList.size() != 0) {
+            return ResponseBuilder.getSuccessResponce(HttpStatus.OK, "Sub Categories retrieved Successfully", subCategoriesList, subCategoriesList.size(), subCategoriesIdList.size());
+        } else {
+            return ResponseBuilder.getSuccessResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", null);
+        }
     }
 
     private List<CategoriesDto> getAllCategories(List<Categories> categoriesList) {

@@ -1,6 +1,6 @@
 package com.example.demo.util;
 
-public class UrlConstraint {
+public final class UrlConstraint {
     private UrlConstraint() {
     }
     public static final String ADMIN = "ROLE_ADMIN";

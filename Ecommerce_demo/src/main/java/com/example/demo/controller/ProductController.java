@@ -93,7 +93,18 @@ public class ProductController {
 
     @PreAuthorize("permitAll()")
     @GetMapping(UrlConstraint.ProductManagement.GET_ALL + UrlConstraint.CATEGORIES)
-    public Response getAllcategories(HttpServletRequest request) {
+    public Response getAllCategories(HttpServletRequest request) {
         return productService.getAllCategories();
+    }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping(UrlConstraint.CATEGORIES + UrlConstraint.ProductManagement.GET)
+    public Response getAllProductsByCategoriesId(@PathVariable("id") Long id, HttpServletRequest request) {
+        return productService.getProductsByCategoryId(id);
+    }
+    @PreAuthorize("permitAll()")
+    @GetMapping(UrlConstraint.SUB_CATEGORIES + UrlConstraint.ProductManagement.GET)
+    public Response getAllSubCategoriesByCategoriesId(@PathVariable("id") Long id, HttpServletRequest request) {
+        return productService.getSubCategoriesCategoryId(id);
     }
 }
