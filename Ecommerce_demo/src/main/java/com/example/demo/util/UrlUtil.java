@@ -6,6 +6,7 @@ public class UrlUtil {
             UrlConstraint.AuthManagement.ROOT + allPrefix,
             UrlConstraint.CustomerManagement.ROOT + UrlConstraint.CustomerManagement.CREATE,
             UrlConstraint.ProductManagement.ROOT + UrlConstraint.ProductManagement.GET,
-            UrlConstraint.ProductManagement.ROOT + UrlConstraint.ProductManagement.GET_ALL
+            UrlConstraint.ProductManagement.ROOT + UrlConstraint.ProductManagement.GET_ALL,
+            UrlConstraint.ProductManagement.ROOT + UrlConstraint.ProductManagement.GET_ALL + UrlConstraint.CATEGORIES
     };
 }

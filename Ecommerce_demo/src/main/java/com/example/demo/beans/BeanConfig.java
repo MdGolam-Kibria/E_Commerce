@@ -3,8 +3,11 @@ package com.example.demo.beans;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class BeanConfig {
@@ -16,5 +19,9 @@ public class BeanConfig {
     public PasswordEncoder getPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource dataSource)
+    {
+        return new JdbcTemplate(dataSource);
+    }
 }

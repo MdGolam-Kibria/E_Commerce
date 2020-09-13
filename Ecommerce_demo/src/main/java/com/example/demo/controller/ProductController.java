@@ -90,4 +90,10 @@ public class ProductController {
 
         return productService.getAll();
     }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping(UrlConstraint.ProductManagement.GET_ALL + UrlConstraint.CATEGORIES)
+    public Response getAllcategories(HttpServletRequest request) {
+        return productService.getAllCategories();
+    }
 }

@@ -7,6 +7,8 @@ public class UrlConstraint {
     public static final String USER = "ROLE_USER";
     private static final String VERSION = "/v1";
     private static final String API = "/api";
+    public static final String CATEGORIES = "/categories";
+    public static final String SUB_CATEGORIES = "/subCategories";
 
     public static class ProductManagement {
         public static final String ROOT = API + VERSION + "/products";

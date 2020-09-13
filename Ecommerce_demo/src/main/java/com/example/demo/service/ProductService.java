@@ -9,4 +9,5 @@ public interface ProductService {
     Response get(Long id);
     Response delete(Long id);
     Response getAll();
+    Response getAllCategories();;
 }

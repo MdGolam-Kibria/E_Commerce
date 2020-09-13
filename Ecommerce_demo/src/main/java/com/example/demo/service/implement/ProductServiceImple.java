@@ -1,5 +1,6 @@
 package com.example.demo.service.implement;
 
+import com.example.demo.dto.CategoriesDto;
 import com.example.demo.dto.ProductDto;
 import com.example.demo.model.Categories;
 import com.example.demo.model.Product;
@@ -45,13 +46,13 @@ public class ProductServiceImple implements ProductService {
 
         List<Categories> categoriesList = product.getCategoriesList();
         categoriesList.forEach(categories -> {
-                categories.getSubCategoriesList().forEach(subCategories -> {
-                    subCategories.setSubCategoriesName(subCategories.getSubCategoriesName());
-                    subCategories = subCategoriesRepository.save(subCategories);
-                });
-                categories.setCategoryName(categories.getCategoryName());
-                categories = categoriesRepository.save(categories);
-                categories.setSubCategoriesList(categories.getSubCategoriesList());
+            categories.getSubCategoriesList().forEach(subCategories -> {
+                subCategories.setSubCategoriesName(subCategories.getSubCategoriesName());
+                subCategories = subCategoriesRepository.save(subCategories);
+            });
+            categories.setCategoryName(categories.getCategoryName());
+            categories = categoriesRepository.save(categories);
+            categories.setSubCategoriesList(categories.getSubCategoriesList());
         });
 
         product.setCategoriesList(categoriesList);
@@ -117,6 +118,23 @@ public class ProductServiceImple implements ProductService {
         return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + "s retrieved Successfully", productDtos, products.size(), numberOfRow);
     }
 
+    @Override
+    public Response getAllCategories() {
+        List<Categories> categoriesList = categoriesRepository.findAllByIsActiveTrue();
+        List<CategoriesDto> categoriesDtos = this.getAllCategories(categoriesList);
+        int numberOfRow = categoriesRepository.countAllByIsActiveTrue();
+        return ResponseBuilder.getSuccessResponce(HttpStatus.OK, "Categories reteieved Successfully", categoriesDtos, categoriesList.size(), numberOfRow);
+    }
+
+    private List<CategoriesDto> getAllCategories(List<Categories> categoriesList) {
+        List<CategoriesDto> categoriesDtos = new ArrayList<>();
+        categoriesList.forEach(categories -> {
+            modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+            CategoriesDto categoriesDto = modelMapper.map(categories, CategoriesDto.class);
+            categoriesDtos.add(categoriesDto);
+        });
+        return categoriesDtos;
+    }
 
     private List<ProductDto> getProducts(List<Product> products) {
         List<ProductDto> productDtos = new ArrayList<>();
