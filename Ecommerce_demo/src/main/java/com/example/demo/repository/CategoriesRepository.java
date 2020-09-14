@@ -9,5 +9,6 @@ public interface CategoriesRepository extends JpaRepository<Categories, Long> {
     //int countByCategoryNameAndIsActiveTrue(String name);
     List<Categories> findAllByIsActiveTrue();
     int countAllByIsActiveTrue();
+    Categories findByCategoryNameAndIsActiveTrue(String categoryName);
 
 }

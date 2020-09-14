@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 public class SubCategories extends BaseModel {
 
-    private String SubCategoriesName;
+    private String subCategoriesName;
 
     @ManyToMany(mappedBy = "subCategoriesList")
     @JsonIgnore

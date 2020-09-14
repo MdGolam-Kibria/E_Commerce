@@ -19,8 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service("productService")
 public class ProductServiceImple implements ProductService {
@@ -46,19 +45,39 @@ public class ProductServiceImple implements ProductService {
         product.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
 
         List<Categories> categoriesList = product.getCategoriesList();
+        Product finalProduct = product;
         categoriesList.forEach(categories -> {
             categories.getSubCategoriesList().forEach(subCategories -> {
-                subCategories.setSubCategoriesName(subCategories.getSubCategoriesName());
-                subCategories = subCategoriesRepository.save(subCategories);
+                SubCategories haveSameSubCategories = subCategoriesRepository.findBySubCategoriesNameAndIsActiveTrue(subCategories.getSubCategoriesName());
+                if (haveSameSubCategories != null) {
+                    subCategories.setId(haveSameSubCategories.getId());
+                    subCategories.setIsActive(true);
+                    subCategories.setUpdatedAt(new Date());
+                    subCategories.setSubCategoriesName(haveSameSubCategories.getSubCategoriesName());
+                    subCategories = subCategoriesRepository.save(subCategories);//just update
+                } else {
+                    subCategories.setSubCategoriesName(subCategories.getSubCategoriesName());
+                    subCategories = subCategoriesRepository.save(subCategories);
+                }
             });
-            categories.setCategoryName(categories.getCategoryName());
-            categories = categoriesRepository.save(categories);
-            categories.setSubCategoriesList(categories.getSubCategoriesList());
+            Categories haveSameNameCategories = categoriesRepository.findByCategoryNameAndIsActiveTrue(categories.getCategoryName());
+            if (haveSameNameCategories != null) {
+                categories.setId(haveSameNameCategories.getId());
+                categories.setCategoryName(haveSameNameCategories.getCategoryName());
+                categories.setIsActive(true);
+                categories.setUpdatedAt(new Date());
+                categories = categoriesRepository.save(categories);//just update
+                categories.setSubCategoriesList(categories.getSubCategoriesList());
+            } else {
+                categories.setCategoryName(categories.getCategoryName());
+                categories = categoriesRepository.save(categories);
+                categories.setSubCategoriesList(categories.getSubCategoriesList());
+            }
+
         });
 
-        product.setCategoriesList(categoriesList);
 
-        product = productRepository.save(product);
+        product = productRepository.save(finalProduct);
         if (product != null) {
             return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, root + " Created Successfully", null);
         }
@@ -137,7 +156,7 @@ public class ProductServiceImple implements ProductService {
         productIdList.forEach(productId -> {
             productList.add(productRepository.findByIdAndIsActiveTrue(productId));
         });
-        if (productIdList.size() != 0) {
+        if (productList.size() != 0) {
             return ResponseBuilder.getSuccessResponce(HttpStatus.OK, "Products retrieved Successfully", productList, productList.size(), productIdList.size());
         } else {
             return ResponseBuilder.getSuccessResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", null);
@@ -154,7 +173,7 @@ public class ProductServiceImple implements ProductService {
         subCategoriesIdList.forEach(subCategoriesId -> {
             subCategoriesList.add(subCategoriesRepository.findByIdAndIsActiveTrue(subCategoriesId));
         });
-        if (subCategoriesIdList.size() != 0) {
+        if (subCategoriesList.size() != 0) {
             return ResponseBuilder.getSuccessResponce(HttpStatus.OK, "Sub Categories retrieved Successfully", subCategoriesList, subCategoriesList.size(), subCategoriesIdList.size());
         } else {
             return ResponseBuilder.getSuccessResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", null);
