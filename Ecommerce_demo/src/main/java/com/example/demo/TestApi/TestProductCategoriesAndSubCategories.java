@@ -29,7 +29,7 @@ public class TestProductCategoriesAndSubCategories {
     public void initialize() {
         Product product = new Product();
         product.setName("FOOD");
-        product.setImage("https://www.pic.com/image.png");
+        product.setImage("https://scontent.fdac9-1.fna.fbcdn.net/v/t1.0-9/116795153_971643263256982_2321855891114966127_n.jpg?_nc_cat=108&_nc_sid=09cbfe&_nc_ohc=wMeao2Mt8RcAX-jorMl&_nc_ht=scontent.fdac9-1.fna&oh=8d3e67d11f2186b690de4afb0ab3762d&oe=5F85E300");
         product.setMainPrice(500.50);
         product.setDiscountPrice(200.66);
         product.setDiscountNote("20%");

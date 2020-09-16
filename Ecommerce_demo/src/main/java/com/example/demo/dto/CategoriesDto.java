@@ -13,5 +13,5 @@ public class CategoriesDto {
     private Long id;
     @NotBlank(message = "categoryName is mandatory")
     private String categoryName;
-    private List<@Valid SubCategories> subCategoriesList;
+    private List<SubCategories> subCategoriesList;
 }

@@ -7,6 +7,6 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class SubCategoriesDto {
     private Long id;
-    @NotBlank(message = "SubCategoriesName is Mandatory")
+//    @NotBlank(message = "SubCategoriesName is Mandatory")
     private String SubCategoriesName;
 }

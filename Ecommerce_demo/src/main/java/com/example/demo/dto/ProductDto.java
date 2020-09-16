@@ -3,8 +3,10 @@ package com.example.demo.dto;
 import com.example.demo.model.Categories;
 import lombok.Data;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
@@ -19,6 +21,7 @@ public class ProductDto {
     private Double discountPrice;
     private String discountNote;
     @NotNull(message = "Quantity is Mandatory")
+    @Min(1)
     private int quantity;
     @NotEmpty(message = "Description is mandatory")
     private String description;
