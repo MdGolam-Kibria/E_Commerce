@@ -14,6 +14,8 @@ import com.example.demo.view.Response;
 import com.example.demo.view.ResponseBuilder;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +25,7 @@ import java.util.*;
 
 @Service("productService")
 public class ProductServiceImple implements ProductService {
+    private static final Logger logger = LoggerFactory.getLogger(ProductServiceImple.class.getName());
     private final ProductRepository productRepository;
     private final CategoriesRepository categoriesRepository;
     private final SubCategoriesRepository subCategoriesRepository;
@@ -43,23 +46,29 @@ public class ProductServiceImple implements ProductService {
     public Response save(ProductDto productDto) {
         Product product = modelMapper.map(productDto, Product.class);
         product.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-
+        if (!(product.getMainPrice() >= product.getDiscountPrice())) {
+            return ResponseBuilder.getFailureResponce(HttpStatus.NOT_ACCEPTABLE, "product price should be  less or equal  product discount price");
+        }
         List<Categories> categoriesList = product.getCategoriesList();
         Product finalProduct = product;
         categoriesList.forEach(categories -> {
-            categories.getSubCategoriesList().forEach(subCategories -> {
-                SubCategories haveSameSubCategories = subCategoriesRepository.findBySubCategoriesNameAndIsActiveTrue(subCategories.getSubCategoriesName());
-                if (haveSameSubCategories != null) {
-                    subCategories.setId(haveSameSubCategories.getId());
-                    subCategories.setIsActive(true);
-                    subCategories.setUpdatedAt(new Date());
-                    subCategories.setSubCategoriesName(haveSameSubCategories.getSubCategoriesName());
-                    subCategories = subCategoriesRepository.save(subCategories);//just update
-                } else {
-                    subCategories.setSubCategoriesName(subCategories.getSubCategoriesName());
-                    subCategories = subCategoriesRepository.save(subCategories);
-                }
-            });
+            if (categories.getSubCategoriesList() != null) {//check if you dont have any sub categories or not
+                categories.getSubCategoriesList().forEach(subCategories -> {
+                    SubCategories haveSameSubCategories = subCategoriesRepository.findBySubCategoriesNameAndIsActiveTrue(subCategories.getSubCategoriesName());
+                    if (haveSameSubCategories != null) {
+                        subCategories.setId(haveSameSubCategories.getId());
+                        subCategories.setIsActive(true);
+                        subCategories.setUpdatedAt(new Date());
+                        subCategories.setSubCategoriesName(haveSameSubCategories.getSubCategoriesName());
+                        subCategories = subCategoriesRepository.save(subCategories);//just update
+                    } else {
+                        subCategories.setSubCategoriesName(subCategories.getSubCategoriesName());
+                        subCategories = subCategoriesRepository.save(subCategories);
+                    }
+                });
+            } else {//if you dont have any sub categories
+                logger.info("Save A Product Without subCategories");
+            }
             Categories haveSameNameCategories = categoriesRepository.findByCategoryNameAndIsActiveTrue(categories.getCategoryName());
             if (haveSameNameCategories != null) {
                 categories.setId(haveSameNameCategories.getId());
