@@ -45,7 +45,7 @@ public class ProductController {
         User user = userRepository.findByUsernameAndIsActiveTrue(requestedUserName);
         if (user != null) {
             if (checkUserRole.getRoleType(user.getRoles()).equals(UrlConstraint.ADMIN)) {///f
-                return productService.save(productDto);
+                return productService.createProduct(productDto);
             }
         }
         return ResponseBuilder.getFailureResponce(HttpStatus.BAD_REQUEST, "Sorry You do not have permission for this URL");
@@ -91,6 +91,7 @@ public class ProductController {
         return productService.getAll();
     }
 
+
     @PreAuthorize("permitAll()")
     @GetMapping(UrlConstraint.ProductManagement.GET_ALL + UrlConstraint.CATEGORIES)
     public Response getAllCategories(HttpServletRequest request) {
@@ -102,6 +103,7 @@ public class ProductController {
     public Response getAllProductsByCategoriesId(@PathVariable("id") Long id, HttpServletRequest request) {
         return productService.getProductsByCategoryId(id);
     }
+
     @PreAuthorize("permitAll()")
     @GetMapping(UrlConstraint.SUB_CATEGORIES + UrlConstraint.ProductManagement.GET)
     public Response getAllSubCategoriesByCategoriesId(@PathVariable("id") Long id, HttpServletRequest request) {

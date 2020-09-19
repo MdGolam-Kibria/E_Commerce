@@ -3,6 +3,7 @@ package com.example.demo.dto;
 import com.example.demo.model.Categories;
 import lombok.Data;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -27,5 +28,5 @@ public class ProductDto {
     private String description;
     @NotNull(message = "Stock is mandatory")
     private int stock;
-    private List<Categories> categories ;
+    private List<CategoriesDto> categories ;
 }

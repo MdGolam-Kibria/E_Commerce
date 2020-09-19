@@ -2,6 +2,7 @@ package com.example.demo.service.implement;
 
 import com.example.demo.dto.CategoriesDto;
 import com.example.demo.dto.ProductDto;
+import com.example.demo.dto.SubCategoriesDto;
 import com.example.demo.jdbc.DataSourceFromMyOwnSql;
 import com.example.demo.model.Categories;
 import com.example.demo.model.Product;
@@ -21,7 +22,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service("productService")
 public class ProductServiceImple implements ProductService {
@@ -43,55 +46,83 @@ public class ProductServiceImple implements ProductService {
     }
 
     @Override
-    public Response save(ProductDto productDto) {
+    public Response createSubCategory(SubCategoriesDto subCategoriesDto) {
+        SubCategories subCategories = modelMapper.map(subCategoriesDto, SubCategories.class);
+        SubCategories subCat = subCategoriesRepository.findBySubCategoriesNameAndIsActiveTrue(subCategories.getSubCategoriesName());
+        if (subCat != null) {
+            subCat.setUpdatedAt(new Date());
+            subCat.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+            subCat = subCategoriesRepository.save(subCat);//update
+            return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "SubCategories Update Successfully", subCategories.getSubCategoriesName());
+        }
+        subCategories = subCategoriesRepository.save(subCategories);
+        if (subCategories != null) {
+            return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "SubCategories Created Successfully", subCategories.getSubCategoriesName());
+        }
+        return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
+    }
+
+    @Override
+    public Response createCategory(CategoriesDto categoriesDto) {
+        Categories categories = modelMapper.map(categoriesDto, Categories.class);
+        if (categories.getSubCategoriesList() != null) {
+            categories.getSubCategoriesList().forEach(subCategories -> {
+                subCategories = subCategoriesRepository.findByIdAndIsActiveTrue(subCategories.getId());
+                subCategories.setUpdatedAt(new Date());
+                subCategories = subCategoriesRepository.save(subCategories);//update
+            });
+        }
+        Categories cat = categoriesRepository.findByCategoryNameAndIsActiveTrue(categories.getCategoryName());
+        if (cat != null) {
+            cat.setUpdatedAt(new Date());
+            cat.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+            cat = categoriesRepository.save(cat);//update
+            if (cat != null) {
+                return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "Category Update Successfully", categories.getCategoryName());
+            }
+        } else {
+            categories = categoriesRepository.save(categories);//create
+            if (categories != null) {
+                return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "Category Created Successfully", categories.getCategoryName());
+            }
+        }
+        return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
+    }
+
+    @Override
+    public Response createProduct(ProductDto productDto) {
         Product product = modelMapper.map(productDto, Product.class);
         product.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         if (!(product.getMainPrice() >= product.getDiscountPrice())) {
             return ResponseBuilder.getFailureResponce(HttpStatus.NOT_ACCEPTABLE, "product price should be  less or equal  product discount price");
         }
-        List<Categories> categoriesList = product.getCategoriesList();
-        Product finalProduct = product;
-        categoriesList.forEach(categories -> {
-            if (categories.getSubCategoriesList() != null) {//check if you dont have any sub categories or not
-                categories.getSubCategoriesList().forEach(subCategories -> {
-                    SubCategories haveSameSubCategories = subCategoriesRepository.findBySubCategoriesNameAndIsActiveTrue(subCategories.getSubCategoriesName());
-                    if (haveSameSubCategories != null) {
-                        subCategories.setId(haveSameSubCategories.getId());
-                        subCategories.setIsActive(true);
-                        subCategories.setUpdatedAt(new Date());
-                        subCategories.setSubCategoriesName(haveSameSubCategories.getSubCategoriesName());
-                        subCategories = subCategoriesRepository.save(subCategories);//just update
-                    } else {
-                        subCategories.setSubCategoriesName(subCategories.getSubCategoriesName());
-                        subCategories = subCategoriesRepository.save(subCategories);
-                    }
-                });
-            } else {//if you dont have any sub categories
-                logger.info("Save A Product Without subCategories");
+        if (product.getCategoriesList() != null) {//if have any category with this product
+            product.getCategoriesList().forEach(categories -> {//for update this product
+                Categories cat = categoriesRepository.findByIdAndIsActiveTrue(categories.getId());
+                if (cat != null) {//current category
+                    cat.setUpdatedAt(new Date());
+                    cat.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+                    cat = categoriesRepository.save(cat);
+                }
+            });
+        }
+        Product haveProduct = productRepository.findByNameAndIsActiveTrue(product.getName());
+        if (haveProduct != null) {//have previous product with this name
+            haveProduct.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+            haveProduct.setUpdatedAt(new Date());
+            haveProduct.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+            haveProduct = productRepository.save(haveProduct);
+            if (haveProduct != null) {
+                return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "Product Update Successfully", product.getName());
             }
-            Categories haveSameNameCategories = categoriesRepository.findByCategoryNameAndIsActiveTrue(categories.getCategoryName());
-            if (haveSameNameCategories != null) {
-                categories.setId(haveSameNameCategories.getId());
-                categories.setCategoryName(haveSameNameCategories.getCategoryName());
-                categories.setIsActive(true);
-                categories.setUpdatedAt(new Date());
-                categories = categoriesRepository.save(categories);//just update
-                categories.setSubCategoriesList(categories.getSubCategoriesList());
-            } else {
-                categories.setCategoryName(categories.getCategoryName());
-                categories = categoriesRepository.save(categories);
-                categories.setSubCategoriesList(categories.getSubCategoriesList());
-            }
-
-        });
-
-
-        product = productRepository.save(finalProduct);
+        }
+        product = productRepository.save(product);
         if (product != null) {
-            return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, root + " Created Successfully", null);
+            return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "Product Creation Successfully", product.getName());
         }
         return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
     }
+
 
     @Override
     public Response update(Long id, ProductDto productDto) {

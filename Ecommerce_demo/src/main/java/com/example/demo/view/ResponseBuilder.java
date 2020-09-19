@@ -10,7 +10,9 @@ import java.util.List;
 
 public final class ResponseBuilder {
     private ResponseBuilder() {
-    };
+    }
+
+    ;
 
     private static List<ErrorResponseDto> getCustomError(BindingResult result) {
         List<ErrorResponseDto> dtoList = new ArrayList<>();
@@ -75,4 +77,6 @@ public final class ResponseBuilder {
                 .build();
     }
 
+    public static void getFailureResponce(HttpStatus notAcceptable, String s, Object o) {
+    }
 }
