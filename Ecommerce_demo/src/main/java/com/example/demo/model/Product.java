@@ -9,6 +9,7 @@ import java.util.List;
 @Entity(name = "product")
 public class Product extends BaseModel {
     private String name;
+    private String productRoute;
     private String image;
     private double mainPrice;
     private double discountPrice;

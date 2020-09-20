@@ -15,6 +15,8 @@ public class ProductDto {
     private Long id;
     @NotEmpty(message = "Name is Mandatory")
     private String name;
+    @NotEmpty(message = "productRoute is mandatory")
+    private String productRoute;
     @NotEmpty(message = "Image is mandatory")
     private String image;
     @NotNull(message = "price is mandatory")
@@ -28,5 +30,5 @@ public class ProductDto {
     private String description;
     @NotNull(message = "Stock is mandatory")
     private int stock;
-    private List<CategoriesDto> categories ;
+    private List<CategoriesDto> categories;
 }
