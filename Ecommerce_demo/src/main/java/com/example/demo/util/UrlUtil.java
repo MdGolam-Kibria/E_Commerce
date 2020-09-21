@@ -13,5 +13,6 @@ public final class UrlUtil {
             UrlConstraint.ProductManagement.ROOT + UrlConstraint.ProductManagement.GET_ALL + UrlConstraint.CATEGORIES,
             UrlConstraint.ProductManagement.ROOT+UrlConstraint.CATEGORIES + UrlConstraint.ProductManagement.GET,
             UrlConstraint.ProductManagement.ROOT+UrlConstraint.SUB_CATEGORIES + UrlConstraint.ProductManagement.GET,
+            UrlConstraint.FileManagement.ROOT+UrlConstraint.FileManagement.SAVE
     };
 }

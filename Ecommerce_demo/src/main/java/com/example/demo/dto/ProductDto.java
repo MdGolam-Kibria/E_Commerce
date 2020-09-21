@@ -30,5 +30,5 @@ public class ProductDto {
     private String description;
     @NotNull(message = "Stock is mandatory")
     private int stock;
-    private List<CategoriesDto> categories;
+    private List<@Valid CategoriesDto> categories;
 }

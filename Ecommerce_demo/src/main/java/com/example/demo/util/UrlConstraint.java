@@ -29,4 +29,8 @@ public final class UrlConstraint {
         public static final String ROOT = API + "/auth";
         public static final String LOGIN = "/login";
     }
+    public static class FileManagement {
+        public static final String ROOT = API + VERSION + "/files";
+        public static final String SAVE = "/save";
+    }
 }

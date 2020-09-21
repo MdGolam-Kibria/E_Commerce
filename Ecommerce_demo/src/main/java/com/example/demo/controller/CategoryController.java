@@ -26,9 +26,9 @@ public class CategoryController {
         this.productService = productService;
     }
 
+    @IsAdmin
     @ValidateData
     @PostMapping(UrlConstraint.ProductManagement.CREATE + UrlConstraint.CATEGORIES)
-    @IsAdmin
     public Response createCategory(@Valid @RequestBody CategoriesDto categoriesDto, BindingResult result, HttpServletRequest request) {
         return productService.createCategory(categoriesDto);
     }

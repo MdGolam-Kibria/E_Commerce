@@ -36,7 +36,7 @@ public class AuthController {
 
     @IsAdmin
     @GetMapping(UrlConstraint.TOKEN_VALIDATION)
-    public Response testTokenValidation() {//for check admin token is valid or not ("for frontEnd security")
+    public Response testTokenValidation() {//for check admin token is valid or not ("it's only for frontEnd admin panel security")
         return ResponseBuilder.getSuccessResponce(HttpStatus.ACCEPTED, "Valid Token", null);
     }
 }
