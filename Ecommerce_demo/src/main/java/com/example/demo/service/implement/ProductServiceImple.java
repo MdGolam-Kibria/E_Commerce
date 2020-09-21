@@ -67,20 +67,25 @@ public class ProductServiceImple implements ProductService {
         Categories categories = modelMapper.map(categoriesDto, Categories.class);
         if (categories.getSubCategoriesList() != null) {
             categories.getSubCategoriesList().forEach(subCategories -> {
-                subCategories = subCategoriesRepository.findByIdAndIsActiveTrue(subCategories.getId());
-                subCategories.setUpdatedAt(new Date());
-                subCategories = subCategoriesRepository.save(subCategories);//update
+                SubCategories subCat = subCategoriesRepository.findByIdAndIsActiveTrue(subCategories.getId());
+                if (subCat != null) {
+                    subCat.setId(subCategories.getId());
+                    subCat.setUpdatedAt(new Date());
+                    subCat = subCategoriesRepository.save(subCat);//update
+                }
             });
         }
         Categories cat = categoriesRepository.findByCategoryNameAndIsActiveTrue(categories.getCategoryName());
         if (cat != null) {
             cat.setUpdatedAt(new Date());
             cat.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+            cat.setSubCategoriesList(categories.getSubCategoriesList());
             cat = categoriesRepository.save(cat);//update
             if (cat != null) {
                 return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "Category Update Successfully", categories.getCategoryName());
             }
         } else {
+            categories.setSubCategoriesList(categories.getSubCategoriesList());
             categories = categoriesRepository.save(categories);//create
             if (categories != null) {
                 return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "Category Created Successfully", categories.getCategoryName());

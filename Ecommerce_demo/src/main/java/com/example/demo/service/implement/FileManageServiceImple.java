@@ -3,7 +3,6 @@ package com.example.demo.service.implement;
 import com.example.demo.service.FileManageService;
 import com.example.demo.view.Response;
 import com.example.demo.view.ResponseBuilder;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +12,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Enumeration;
 
 @Service("fileManageService")
 public class FileManageServiceImple implements FileManageService {
@@ -23,7 +21,7 @@ public class FileManageServiceImple implements FileManageService {
     @Override
     public Response saveFile(MultipartFile file, HttpServletRequest request) {
 
-        final Path root = Paths.get("K:\\final E-commerce project\\E_Commerce\\Ecommerce_demo\\uploads\\kibrias local server\\products");
+        final Path root = Paths.get("K:\\final E-commerce project\\E_Commerce\\Ecommerce_demo\\uploads\\kibria local server\\products");
 
         //tro to control file size with MultipartFile object
         long size = file.getSize();//requested file size
