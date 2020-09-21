@@ -25,7 +25,7 @@ public class FileManageServiceImple implements FileManageService {
 
         final Path root = Paths.get("K:\\final E-commerce project\\E_Commerce\\Ecommerce_demo\\uploads\\kibria local server\\products");
 
-        //tro to control file size with response
+        //tro to control file size with MultipartFile object
         long size = file.getSize();//requested file size
 
         Long fileSize = size / (1024 * 1024);//converted file size requested size type to MB
