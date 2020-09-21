@@ -23,7 +23,7 @@ public class FileManageServiceImple implements FileManageService {
     @Override
     public Response saveFile(MultipartFile file, HttpServletRequest request) {
 
-        final Path root = Paths.get("K:\\final E-commerce project\\E_Commerce\\Ecommerce_demo\\uploads\\kibria local server\\products");
+        final Path root = Paths.get("K:\\final E-commerce project\\E_Commerce\\Ecommerce_demo\\uploads\\kibrias local server\\products");
 
         //tro to control file size with MultipartFile object
         long size = file.getSize();//requested file size
