@@ -33,7 +33,7 @@ public class FileManageServiceImple implements FileManageService {
         if (fileSize > Long.parseLong(String.valueOf(maxFileSize))) {//this logic only workable for offline not online
             return ResponseBuilder.getFailureResponce(HttpStatus.NOT_ACCEPTABLE, "File size should be less then 100 MB");
         }
-
+        //check file already created or not
         if (!Files.exists(root)) {//if don't have Directories in our system OS
             try {
                 Files.createDirectories(root);//create Directories in our system OS
