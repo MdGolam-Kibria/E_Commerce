@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.annotation.ApiController;
+import com.example.demo.annotation.IsCustomer;
 import com.example.demo.annotation.ValidateData;
 import com.example.demo.dto.OrderDto;
 import com.example.demo.service.OrderService;
@@ -26,7 +27,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PreAuthorize("permitAll()")
+    @IsCustomer
     @ValidateData
     @PostMapping(UrlConstraint.OrderManagement.CREATE + UrlConstraint.ORDER)
     public Response createOrder(@Valid @RequestBody OrderDto orderDto, BindingResult result, HttpServletRequest request) {
