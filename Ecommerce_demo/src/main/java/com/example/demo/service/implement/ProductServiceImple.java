@@ -49,12 +49,11 @@ public class ProductServiceImple implements ProductService {
     public Response createSubCategory(SubCategoriesDto subCategoriesDto) {
         SubCategories subCategories = modelMapper.map(subCategoriesDto, SubCategories.class);
         SubCategories subCat = subCategoriesRepository.findBySubCategoriesNameAndIsActiveTrue(subCategories.getSubCategoriesName());
-        if (subCat != null) {
-            subCat.setUpdatedAt(new Date());
-            subCat.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (subCat != null) {//if have any previous subCategory with this requested name
             subCat = subCategoriesRepository.save(subCat);//update
             return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "SubCategories Update Successfully", subCategories.getSubCategoriesName());
         }
+        //don't have any previous subCategory with this requested name
         subCategories = subCategoriesRepository.save(subCategories);
         if (subCategories != null) {
             return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "SubCategories Created Successfully", subCategories.getSubCategoriesName());
@@ -65,31 +64,27 @@ public class ProductServiceImple implements ProductService {
     @Override
     public Response createCategory(CategoriesDto categoriesDto) {
         Categories categories = modelMapper.map(categoriesDto, Categories.class);
-        if (categories.getSubCategoriesList() != null) {
-            categories.getSubCategoriesList().forEach(subCategories -> {
-                SubCategories subCat = subCategoriesRepository.findByIdAndIsActiveTrue(subCategories.getId());
-                if (subCat != null) {
-                    subCat.setId(subCategories.getId());
-                    subCat.setUpdatedAt(new Date());
-                    subCat = subCategoriesRepository.save(subCat);//update
-                }
-            });
-        }
+
         Categories cat = categoriesRepository.findByCategoryNameAndIsActiveTrue(categories.getCategoryName());
-        if (cat != null) {
-            cat.setUpdatedAt(new Date());
-            cat.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-            cat.setSubCategoriesList(categories.getSubCategoriesList());
+
+        if (cat != null) {//have any category with this requested category name
+            if (categories.getSubCategoriesList() != null) {//if have any subCategory with this request
+                cat.setSubCategoriesList(categories.getSubCategoriesList());//if have any subCategories create reference
+            }
             cat = categoriesRepository.save(cat);//update
             if (cat != null) {
                 return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "Category Update Successfully", categories.getCategoryName());
             }
-        } else {
-            categories.setSubCategoriesList(categories.getSubCategoriesList());
-            categories = categoriesRepository.save(categories);//create
-            if (categories != null) {
-                return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "Category Created Successfully", categories.getCategoryName());
-            }
+        }
+
+
+        //if don't have any category with this requested category name
+        if (categories.getSubCategoriesList() != null) {//if have any subCategory with this request
+            categories.setSubCategoriesList(categories.getSubCategoriesList());//if have any subCategories create reference
+        }
+        categories = categoriesRepository.save(categories);//create
+        if (categories != null) {
+            return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "Category Created Successfully", categories.getCategoryName());
         }
         return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
     }
@@ -97,34 +92,31 @@ public class ProductServiceImple implements ProductService {
     @Override
     public Response createProduct(ProductDto productDto) {
         Product product = modelMapper.map(productDto, Product.class);
-        product.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         if (!(product.getMainPrice() >= product.getDiscountPrice())) {
             return ResponseBuilder.getFailureResponce(HttpStatus.NOT_ACCEPTABLE, "product price should be  less or equal  product discount price");
         }
-        if (product.getCategoriesList() != null) {//if have any category with this product
-            product.getCategoriesList().forEach(categories -> {//for update this product
-                Categories cat = categoriesRepository.findByIdAndIsActiveTrue(categories.getId());
-                if (cat != null) {//current category
-                    cat.setUpdatedAt(new Date());
-                    cat.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-                    cat = categoriesRepository.save(cat);
-                }
-            });
-        }
+
         Product haveProduct = productRepository.findByNameAndIsActiveTrue(product.getName());
+
         if (haveProduct != null) {//have previous product with this name
-            haveProduct.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-            haveProduct.setUpdatedAt(new Date());
-            haveProduct.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+            if (product.getCategoriesList() != null) {
+                haveProduct.setCategoriesList(product.getCategoriesList());//if have any category create reference
+            }
             haveProduct = productRepository.save(haveProduct);
             if (haveProduct != null) {
                 return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "Product Update Successfully", product.getName());
             }
         }
+
+        //don't have any previous product with this name so create a new product
+        if (product.getCategoriesList() != null) {
+            product.setCategoriesList(product.getCategoriesList());//if have any category create reference
+        }
         product = productRepository.save(product);
         if (product != null) {
             return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "Product Creation Successfully", product.getName());
         }
+
         return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
     }
 
