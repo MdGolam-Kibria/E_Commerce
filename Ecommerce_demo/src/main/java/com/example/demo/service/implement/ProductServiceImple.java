@@ -23,7 +23,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service("productService")
@@ -48,11 +47,14 @@ public class ProductServiceImple implements ProductService {
     @Override
     public Response createSubCategory(SubCategoriesDto subCategoriesDto) {
         SubCategories subCategories = modelMapper.map(subCategoriesDto, SubCategories.class);
+
         SubCategories subCat = subCategoriesRepository.findBySubCategoriesNameAndIsActiveTrue(subCategories.getSubCategoriesName());
+
         if (subCat != null) {//if have any previous subCategory with this requested name
             subCat = subCategoriesRepository.save(subCat);//update
             return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "SubCategories Update Successfully", subCategories.getSubCategoriesName());
         }
+
         //don't have any previous subCategory with this requested name
         subCategories = subCategoriesRepository.save(subCategories);
         if (subCategories != null) {
@@ -130,7 +132,7 @@ public class ProductServiceImple implements ProductService {
             modelMapper.map(productDto, product);
             product = productRepository.save(product);
             if (product != null) {
-                return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + " Updated Successfully", null);
+                return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + " Update Successfully", null);
             }
             return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error occurs");
         }
