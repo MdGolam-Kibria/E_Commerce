@@ -3,6 +3,7 @@ package com.example.demo.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -11,7 +12,7 @@ public class Product extends BaseModel {
     private String name;
     private String productRoute;
     private String image;
-    private double mainPrice;
+    private double mainPrice; // are you using mysql db?yes. so bigdecimal is not comfortable for it.
     private double discountPrice;
     private String discountNote;
     private int quantity;

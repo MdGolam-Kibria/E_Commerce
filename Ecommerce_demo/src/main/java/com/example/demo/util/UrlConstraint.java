@@ -11,6 +11,7 @@ public final class UrlConstraint {
     private static final String API = "/api";
     public static final String CATEGORIES = "/categories";
     public static final String SUB_CATEGORIES = "/subCategories";
+    public static final String ORDER = "/order";
 
     public static class ProductManagement {
         public static final String ROOT = API + VERSION + "/products";
@@ -19,6 +20,10 @@ public final class UrlConstraint {
         public static final String DELETE = "/{id}";
         public static final String GET = "/{id}";
         public static final String GET_ALL = "/all";
+    }
+    public static class OrderManagement {
+        public static final String ROOT = API + VERSION + "/order";
+        public static final String CREATE = "/create";
     }
     public static class CustomerManagement {
         public static final String ROOT = API + VERSION + "/customers";
