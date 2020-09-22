@@ -21,6 +21,8 @@ public class Response {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object content;
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Object orderId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private int numberOfElement;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private long rowCount;

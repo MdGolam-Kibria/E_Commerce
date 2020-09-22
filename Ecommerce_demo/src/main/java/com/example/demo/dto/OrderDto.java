@@ -18,6 +18,7 @@ public class OrderDto {
 //    private String totalPrice; //I think its not necessary here. You can calculate it from selected product from backend.
     @NotBlank(message = "area is mandatory")
     private String area;
+    private String transactionId;
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
 //    private LocalDate orderTime; // It should be current date. User will not give date.
     @NotBlank(message = "paymentType is mandatory")

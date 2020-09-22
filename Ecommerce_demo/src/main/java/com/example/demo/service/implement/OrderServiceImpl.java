@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service("orderService")
@@ -55,6 +56,9 @@ public class OrderServiceImpl implements OrderService {
         order.setCustomerIp(request.getRemoteAddr());
         order.setPaymentType(orderDto.getPaymentType());
         order.setCustomerId(orderDto.getCustomerId());
+        if (orderDto.getTransactionId() != null) {
+            order.setTransactionId(orderDto.getTransactionId());
+        }
         order = orderRepository.save(order);
         Order finalOrder = order;
         List<OrderProduct> orderProducts = new ArrayList<>();
@@ -68,7 +72,20 @@ public class OrderServiceImpl implements OrderService {
         });
         if (order != null && orderProducts.size() > 0) {
             //return success response here
-            return ResponseBuilder.getSuccessResponce(HttpStatus.ACCEPTED, "Order Accepted", null);
+            if (orderDto.getTransactionId() != null) {
+                Order completeOrder = orderRepository.findByIdAndIsActiveTrue(order.getId());
+                String uniqueOrderId = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(completeOrder.getId()));
+                if (completeOrder != null) {
+                    completeOrder.setUpdatedAt(new Date());
+                    completeOrder.setIsOrderCompleted(true);
+                    completeOrder.setOrderId(uniqueOrderId);
+                    completeOrder = orderRepository.save(completeOrder);
+                    if (completeOrder != null) {
+                        return ResponseBuilder.getSuccessResponseForOrder(HttpStatus.ACCEPTED, "Order Accepted ! you will get your product within time ", completeOrder.getOrderId());
+                    }
+                }
+            }
+            return ResponseBuilder.getSuccessResponce(HttpStatus.OK, "Order in processing. Please confirm your order", null);
         }
         return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");// return 500 here ok
     }

@@ -18,6 +18,7 @@ public class Order extends BaseModel {
     private LocalDateTime orderTime;
     private String paymentType;
     private String transactionId;
+    private String orderId;
     @Column(updatable = false)
     private String customerIp;
     @Column(updatable = false,length = 10, precision =0)
