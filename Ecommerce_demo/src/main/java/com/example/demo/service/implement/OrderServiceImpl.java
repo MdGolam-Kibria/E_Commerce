@@ -85,7 +85,7 @@ public class OrderServiceImpl implements OrderService {
                     }
                 }
             }
-            return ResponseBuilder.getSuccessResponce(HttpStatus.OK, "Order in processing. Please confirm your order", null);
+            return ResponseBuilder.getSuccessResponce(HttpStatus.OK, "Order in processing. Confirm your order by complete your payment", null);
         }
         return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");// return 500 here ok
     }
