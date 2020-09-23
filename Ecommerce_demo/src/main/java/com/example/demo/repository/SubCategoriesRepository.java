@@ -10,5 +10,6 @@ public interface SubCategoriesRepository extends JpaRepository<SubCategories,Lon
     List<SubCategories> findAllByIsActiveTrue();
     SubCategories findByIdAndIsActiveTrue(Long subcategoryId);
     SubCategories findBySubCategoriesNameAndIsActiveTrue(String subCategoriesName);
+    int countAllByIsActiveTrue();
     //@Query(value = "SELECT r.id FROM User r WHERE r.phone= :phone", nativeQuery = true)
 }

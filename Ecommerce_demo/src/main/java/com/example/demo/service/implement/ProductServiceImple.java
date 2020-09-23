@@ -186,6 +186,14 @@ public class ProductServiceImple implements ProductService {
     }
 
     @Override
+    public Response getAllSubCategories() {
+        List<SubCategories> subCategoriesList = subCategoriesRepository.findAllByIsActiveTrue();
+        List<SubCategoriesDto> subCategoriesDtos = this.getALlSubCategories(subCategoriesList);
+        int numberOfRow = subCategoriesRepository.countAllByIsActiveTrue();
+        return ResponseBuilder.getSuccessResponce(HttpStatus.OK,"Sub Categories retrieved Successfully",subCategoriesDtos,subCategoriesList.size(),numberOfRow);
+    }
+
+    @Override
     public Response getProductsByCategoryId(Long categoryId) {
         List<Long> productIdList = dataSourceFromMyOwnSql.getProductsIdByCategoriesId(categoryId);
         if (productIdList.size() == 0) {
@@ -219,6 +227,15 @@ public class ProductServiceImple implements ProductService {
         }
     }
 
+    private List<SubCategoriesDto> getALlSubCategories(List<SubCategories> subCategoriesList){
+        List<SubCategoriesDto> subCategoriesDtos = new ArrayList<>();
+        subCategoriesList.forEach(subCategories -> {
+            modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+            SubCategoriesDto subCategoriesDto = modelMapper.map(subCategories,SubCategoriesDto.class);
+            subCategoriesDtos.add(subCategoriesDto);
+        });
+        return subCategoriesDtos;
+    }
     private List<CategoriesDto> getAllCategories(List<Categories> categoriesList) {
         List<CategoriesDto> categoriesDtos = new ArrayList<>();
         categoriesList.forEach(categories -> {
