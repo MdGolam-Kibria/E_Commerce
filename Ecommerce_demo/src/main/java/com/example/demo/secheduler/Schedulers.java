@@ -22,12 +22,12 @@ public class Schedulers {
         this.orderRepository = orderRepository;
     }
 
-    @Scheduled(fixedRate = 300000l)//check in processing order after 5 min and delete all in processing order data
+    @Scheduled(fixedRate = 500000l)//check in processing order after 5 min and delete all in processing order data
     public void testScheduling() {
         List<Order> orderList = orderRepository.findByTransactionIdAndIsActiveTrue(null);
         if (orderList != null) {
             orderRepository.deleteAll(orderList);
-            logger.info("Delete inProcessing Orders Using Scheduling");
+            logger.info("The in processing Orders have deleted within 5 minutes");
         }
     }
 }
