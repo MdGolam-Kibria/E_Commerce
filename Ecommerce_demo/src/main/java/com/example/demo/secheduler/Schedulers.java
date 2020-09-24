@@ -23,7 +23,7 @@ public class Schedulers {
     }
 
     @Scheduled(fixedRate = 500000l)//check in processing order after 5 min and delete all in processing order data
-    public void testScheduling() {
+    public void deleteInProcessingOrdersWithInFiveMin() {
         List<Order> orderList = orderRepository.findByTransactionIdAndIsActiveTrue(null);
         if (orderList != null) {
             orderRepository.deleteAll(orderList);
